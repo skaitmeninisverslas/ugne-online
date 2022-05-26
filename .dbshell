@@ -1,0 +1,87 @@
+use admin
+use ugne
+use ugne
+use ugne
+sudo vi /etc/mongodb.conf
+sudo vi /usr/local/etc/mongodb.conf
+sudo vi /usr/local/etc/mongodb.conf;
+mongo
+cd
+cd .. cd
+kill
+use admin
+rs
+show dbs
+show dbs
+show dbs
+show dbs
+use admin
+db
+use ugne
+db
+use admin
+use
+db
+use db
+show dbs
+show usr
+show users
+use admin
+mongo
+mongo --port 27017 -u "UgneAdmin" -p "Kaktusas919"
+mongo --port 27017 -u "UgneAdmin" -p "Kaktusas919" --authenticationDatabase "admin"
+mongo --port 27017 -u "UgneAdmin" -p "Kaktusas919" --authenticationDatabase "admin";
+mongo --port 27017 -u "admin" -p "Kaktusas919" --authenticationDatabase "admin"
+mongo --port 27017 -u "admin" -p "Kaktusas919" --authenticationDatabase "ugne"
+use demo
+show users
+mongo --port 27017 -u admin -p Isgerkarkli1 --authenticationDatabase admin
+--port 27017 -u admin -p Isgerkarkli1 --authenticationDatabase admin
+use demo
+use demo
+mongo -u demo
+mongo -u admin
+use demo
+db
+show dbs
+show dbs
+use admin
+use admin
+quit
+--auth
+show dbs
+--port 27017 -u admin -p Isgerkarkli1 --authenticationDatabase admin
+use demo
+show dbs
+show dbs
+show dbs
+use demo
+show usr
+db
+db
+show dbs
+use demo
+db.createCollection(categories, {title:"style"})
+db.createCollection("categories", {title:"style"})
+db.createCollection("categories")
+db
+show dbs
+use soft
+use soft
+use admin
+use soft
+db.getUsers()
+use soft
+db.getUsers()
+show users
+use soft
+show users
+use admin
+show users
+use soft
+use soft
+use soft
+show users
+show db
+show users
+show dbs

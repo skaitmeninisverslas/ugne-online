@@ -1,0 +1,29 @@
+@keyframes fadeOut {
+  from {opacity: 1;}
+  to {opacity: .9;}
+}
+
+@keyframes show {
+  from {right: -100%; max-width: 0}
+  to {right:0 !important;max-width: 1024px;}
+}
+
+@keyframes fadeIn {
+  from {opacity: .4;}
+  to {opacity: 1;}
+}
+
+@keyframes colorIn {
+  from {color: #000;}
+  to {color: #FD885D;}
+}
+
+@keyframes cross {
+  from {transform: rotate(0deg);}
+  to {transform: rotate(45deg);}
+}
+
+@keyframes crossOut {
+  from {transform: rotate(0deg);}
+  to {transform: rotate(-45deg);}
+}

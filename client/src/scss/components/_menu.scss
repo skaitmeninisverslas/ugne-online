@@ -1,0 +1,135 @@
+.MENU {
+  position: fixed;
+  top: 0;
+  left: 0;
+  height: 100%;
+  text-align: center;
+  background: $white;
+  -webkit-animation-fill-mode: forwards !important;
+  @include media-breakpoint-down(sm) {
+    overflow: auto;
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  &.hide {
+    display: none;
+  }
+
+  &.show {
+    display: block !important;
+    max-width: 1024px;
+    right: 0;
+    animation: show;
+    animation-duration: .5s;
+  }
+
+  &__first {
+    display: inline-block;
+    vertical-align: middle;
+    width: 55%;
+    padding-right: 100px;
+    padding-left: 100px;
+    & ul {
+      width: 100%;
+    }
+  }
+
+  &__second {
+    display: inline-block;
+    vertical-align: middle;
+    height: 100%;
+    width: 45%;
+    padding-right: 100px;
+    padding-left: 100px;
+    border-right: 1px solid $border;
+    border-left: 1px solid $border;
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  @include media-breakpoint-down(sm) {
+    &__first, &__second {
+      display: block;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+    }
+    &__first {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    &__second {
+      border-top: 1px solid $border;
+    }
+  }
+
+  &__item {
+    padding: 14px 0;
+    & a {
+      font-size: $font-lg;
+      text-transform: capitalize;
+      color: $black;
+      text-decoration: none;
+      &:hover {
+        -webkit-animation-fill-mode: forwards !important;
+        animation: colorIn;
+        animation-duration: .5s;
+      }
+    }
+  }
+
+  &__information {
+    position: relative;
+    top: 50%;
+    transform: translateY(-50%);
+    &-image {
+      & img {
+        display: block;
+        width: 100%;
+      }
+      height: $space-xxl;
+      width: $space-xxl;
+      margin: 0 auto;
+      margin-bottom: $space-xs;
+    }
+
+    &-heading {
+      padding-top: $space-xs;
+      font-size: $font-xl;
+    }
+
+    &-text {
+      font-family: $times;
+      font-size: $font-md;
+      color: $text;
+      line-height: 1.7em;
+      padding: $space-xs;
+    }
+
+    &-social {
+      padding: $space-xs;
+      &:hover i {
+        opacity: .4;
+      }
+      & a {
+        display: inline-block;
+        &:hover i {
+          -webkit-animation-fill-mode: forwards !important;
+          animation: fadeIn;
+          animation-duration: .5s;
+        }
+        & i {
+          font-size: $font-xl;
+        }
+      }
+    }
+
+    &-margin {
+      margin-right: $space-xxs;
+    }
+  }
+}

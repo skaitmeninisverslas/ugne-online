@@ -1,0 +1,11 @@
+[0;1;32m●[0m mongodb.service - An object/document-oriented database
+   Loaded: loaded (/lib/systemd/system/mongodb.service; enabled; vendor preset: enabled)
+   Active: [0;1;32mactive (running)[0m since Thu 2020-04-09 20:51:34 EEST; 3 days ago
+     Docs: man:mongod(1)
+ Main PID: 8619 (mongod)
+    Tasks: 28 (limit: 90)
+   CGroup: /system.slice/mongodb.service
+           └─8619 /usr/bin/mongod --unixSocketPrefix=/run/mongodb --config /etc/mongodb.conf
+
+Apr 09 20:51:34 vps1130038.vpsnet.lt systemd[1]: Stopped An object/document-oriented database.
+Apr 09 20:51:34 vps1130038.vpsnet.lt systemd[1]: Started An object/document-oriented database.

@@ -1,0 +1,127 @@
+.TOPBAR {
+	width: 100%;
+	z-index: 1100;
+	// position: sticky;
+	top: 0;left: 0;right: 0;
+	padding: $space-lg 0;
+
+	@include media-breakpoint-down(md) {
+		padding: $space-sm 0;
+	}
+
+	@include media-breakpoint-down(sm) {
+		position: fixed;
+		top: auto;
+		padding: $space-xs;
+		bottom: 0;
+		background: $white;
+		border-top: 1px solid $border;
+	}
+
+	&__button {
+		position: relative;
+		left: 0;
+		display: inline-block;
+		vertical-align: middle;
+		z-index: 100;
+		cursor: pointer;
+		@include media-breakpoint-down(sm) {
+			float: left;
+		}
+		& span {
+			display: block;
+			width: $font-xl;
+			height: 3px;
+			margin-top: 3px;
+			background: $text;
+		}
+
+		& .open {
+			&.show {
+				display: none;
+			}
+		}
+
+		& .cross {
+			-webkit-animation-fill-mode: forwards;
+			&.show {
+				&:first-child{
+					margin-top: 0px !important;
+					animation-name: cross;
+					animation-duration: .5s;
+				}
+
+				&:nth-child(3) {
+					animation-name: crossOut;
+					animation-duration: .5s;
+					position: relative;
+					top: -6px;
+				}
+			}
+		}
+	}
+
+	&__branding {
+		display: inline-block;
+    color: $black;
+    text-decoration: none !important;
+		position: relative;
+		left: 48%;
+		line-height: 1em;
+		transform: translateX(-50%);
+		border-bottom: solid 1px $black;
+		padding-bottom: $space-xxs;
+		font-size: $font-xl;
+    &:hover {
+      color: $black;
+    }
+
+		@include media-breakpoint-down(sm) {
+			position: fixed;
+			top: 0;
+			padding-top: $space-sm;
+		}
+	}
+
+	&__socials {
+		float: right;
+		display: inline-block;
+		vertical-align: middle;
+		&:hover a {
+			opacity: .4;
+		}
+
+		& a {
+			display: inline-block;
+			padding: $space-xxs 15px;
+			@include media-breakpoint-down(sm) {
+				padding: 0 15px;
+			}
+			&:hover {
+				-webkit-animation-fill-mode: forwards !important;
+				animation: fadeIn;
+				animation-duration: .5s;
+			}
+			&:first-child {
+				padding-right: 0;
+			}
+		}
+
+		& i {
+			font-size: 18px;
+		}
+
+		& .search {
+			padding-right: 0;
+		}
+
+		& .search i {
+			font-size: 20px;
+		}
+
+		&-border {
+			height: 100%;
+			border-right: 1px solid $border;
+		}
+	}
+}

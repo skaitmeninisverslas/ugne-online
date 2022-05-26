@@ -1,0 +1,82 @@
+.PAGE {
+  padding-bottom: $space-xs;
+  &__title {
+    text-align: center;
+    color: $black;
+    line-height: 1.6em;
+    font-weight: 400;
+    font-size: $font-lg;
+    text-transform: capitalize;
+    &.no-image {
+      margin-bottom: $space-xs !important;
+    }
+
+    &.image {
+      padding-bottom: $space-xs;
+    }
+  }
+  &__content {
+    font-family: $times;
+    font-size: $font-md;
+    line-height: 1.7em;
+    letter-spacing: 0em;
+    text-align: center;
+    &.no-image {
+      margin-top: $space-xs !important;
+      margin-bottom: $space-xs !important;
+    }
+
+    &.image {
+      padding: $space-xs;
+      display: inline-block;
+      text-align: left;
+      width: calc(100% / 2.4);
+      @include media-breakpoint-down(sm) {
+        width: 100%;
+        text-align: left;
+      }
+    }
+  }
+  &__email {
+    margin-top: $space-xs;
+    display: block;
+    text-align: center;
+    color: $hover;
+    font-family: $times;
+    font-size: $font-md;
+    line-height: 1.7em;
+    &:hover {
+      color: $black;
+      text-decoration: none;
+    }
+  }
+  &__subtitle {
+    line-height: 1.6em;
+    letter-spacing: 0px;
+    color: $black;
+    font-weight: $normal;
+    font-size: $font-lg;
+    padding: $space-xs;
+    display: inline-block;
+    vertical-align: top;
+    text-align: right;
+    width: calc(100% / 4);
+    @include media-breakpoint-down(sm) {
+      width: 100%;
+      text-align: left;
+    }
+  }
+  &__image {
+    width: 100%;
+    padding: $space-xs 0px;
+    margin: $space-half 0;
+    @include media-breakpoint-down(sm) {
+      margin-bottom: 0;
+      margin-top: $space-xs;
+    }
+  }
+  &__center {
+    display: inline-block;
+    text-align: center;
+  }
+}
