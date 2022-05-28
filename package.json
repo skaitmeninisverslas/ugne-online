@@ -16,7 +16,7 @@
     "server": "nodemon index.js",
     "production": "NODE_ENV=production node index.js",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
-    "start": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\""
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
