@@ -1,6 +1,6 @@
 {
   "name": "client",
-  "homepage": "https://ugne.online",
+  "homepage": "https://ugne-online.herokuapp.com",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
