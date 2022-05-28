@@ -1,0 +1,227 @@
+.POST {
+  display: inline-block;
+  max-width: 970px;
+  width: 100%;
+  &__center {
+    text-align: center;
+  }
+  &__image {
+    width: 100%;
+  }
+
+  &__date, &__category {
+    text-align: center;
+    margin-top: $space-md;
+    font-family: $sans;
+    font-size: $font-xs;
+    line-height: 1.5em;
+    font-weight: $normal;
+    letter-spacing: .02em;
+    text-decoration: none !important;
+    color: $category;
+    margin-bottom: $space-xs;
+  }
+
+  &__title {
+    text-align: center;
+    font-size: $font-xxl;
+    line-height: 1.5em;
+    letter-spacing: 0px;
+    font-weight: $normal;
+    @include media-breakpoint-down(md) {
+      font-size: $font-lg;
+    }
+    &::after {
+      content: '';
+      display: block;
+      width: 25px;
+      height: 1px;
+      background-color: $bar;
+      margin: $space-xs 0;
+      position: relative;
+      left: 50%;
+      transform: translatex(-50%);
+    }
+  }
+
+  &__category {
+    display: block;
+    text-align: center;
+    margin-top: $space-xs;
+    margin-bottom: 0;
+    &:hover {
+      color: $hover;
+    }
+
+  }
+
+  &__description {
+    margin-top: $space-std;
+    text-align: left;
+    line-height: 1.6em;
+    color: $black;
+    letter-spacing: 0;
+    font-weight: $normal;
+    font-size: $font-lg;
+    @include media-breakpoint-down(sm) {
+      margin-top: $space-half;
+    }
+  }
+
+  &__content {
+    text-align: left;
+    margin-top: $space-std;
+    font-family: $times;
+    font-size: $font-md;
+    line-height: 1.7em;
+    letter-spacing: 0;
+    color: $text;
+    @include media-breakpoint-down(sm) {
+      margin-top: $space-half;
+    }
+  }
+
+  &__info {
+    width: calc(100% - 325px);
+    float: left;
+    @include media-breakpoint-down(sm) {
+      float: none;
+      width: 100%;
+    }
+  }
+
+  &__sidebar {
+    width: 230px;
+    float: left;
+    margin-left: $space-xl;
+    text-align: left !important;
+    margin-top: $space-std;
+    @include media-breakpoint-down(sm) {
+      float: none;
+      width: 100%;
+      margin-left: 0;
+    }
+
+    &-user {
+      @include media-breakpoint-down(sm) {
+        background-color: #f7f7f7;
+        padding: $space-sm;
+      }
+    }
+
+    &-image {
+      width: $space-std;
+      height: $space-std;
+      @include media-breakpoint-down(sm) {
+        margin: 0 auto;
+        display: block;
+      }
+    }
+
+    &-author {
+      color: #fd885d;
+      font-size: $font-xl;
+      line-height: 1.3em;
+      letter-spacing: 0px;
+      font-weight: $normal;
+      margin-top: $space-xs;
+      @include media-breakpoint-down(sm) {
+        text-align: center;
+      }
+    }
+
+    &-about {
+      margin-top: $space-sm;
+      font-family: $times;
+      font-size: $font-md;
+      line-height: 1.7em;
+      letter-spacing: 0px;
+      color: $text;
+      @include media-breakpoint-down(sm) {
+        text-align: center;
+      }
+    }
+
+    &-subscribe {
+      margin-top: $space-std;
+      text-align: left !important;
+      padding: 0;
+
+      @include media-breakpoint-down(sm) {
+        border-top: solid 1px $border;
+        padding-top: $space-std;
+      }
+    }
+
+    &-recent {
+      margin-top: $space-std;
+      padding: $space-xs 0;
+      color: $black;
+      font-size: $font-xl;
+      line-height: 1.3em;
+      font-weight: $normal;
+      text-decoration: none !important;
+      @include media-breakpoint-down(sm) {
+        margin-top: $space-half;
+      }
+
+      &-link {
+        display: block;
+        text-decoration: none !important;
+      }
+
+      &-image {
+        width: 100%;
+        padding-top: $space-xs;
+      }
+
+      &-title {
+        margin-top: $space-xs;
+        font-size: $font-xl;
+        line-height: 1.2em;
+        font-weight: $normal;
+        letter-spacing: 0em;
+      }
+
+      &-category {
+        text-align: left !important;
+        margin-top: 0;
+      }
+
+      &-instagram {
+        margin-top: $space-std;
+        font-size: $font-xl;
+        line-height: 1.3em;
+        font-weight: $normal;
+        letter-spacing: 0px;
+        @include media-breakpoint-down(sm) {
+          margin-top: $space-half;
+        }
+        &-link {
+          margin-top: $space-xs;
+          display: block;
+          color: $hover;
+          text-decoration: none !important;
+          font-family: $times;
+          font-size: $font-md;
+          line-height: 1.7em;
+          letter-spacing: 0em;
+          &:hover {
+            color: $text;
+          }
+        }
+        &-pictures {
+           margin-top: $space-sm;
+        }
+
+        &-image {
+          margin-top: $space-xs;
+          width: 100%;
+          &:first-child {
+            margin-top: 0;
+          }
+        }
+      }
+    }
+  }
+}

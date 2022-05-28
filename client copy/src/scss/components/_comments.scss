@@ -1,0 +1,97 @@
+.COMMENTS {
+  text-align: left;
+  &__name {
+    width: 100%;
+    padding: $space-xxs;
+    margin-top: $space-std;
+    @include media-breakpoint-down(sm) {
+      margin-top: $space-half;
+    }
+    outline: none;
+    border: 1px solid $border;
+    border-radius: 3px;
+    &:focus {
+      border: 1px solid rgba(0,0,0,.3);
+    }
+  }
+
+  &__comment {
+    width: 100%;
+    margin-top: $space-xs;
+    height: $space-xxl;
+    padding: $space-xxs;
+    border: 1px solid $border;
+    border-radius: 3px;
+    outline: none;
+    resize: none;
+    &:focus {
+      border: 1px solid rgba(0,0,0,.3);
+    }
+  }
+
+  & button {
+    margin-top: $space-xxs;
+  }
+
+  &__display {
+    margin-top: $space-xs;
+    width: 100%;
+    text-align: left;
+    display: grid;
+    grid-template-areas: "picture name"
+                         "picture date"
+                         "picture comment";
+    grid-template-columns: 50px auto;
+    grid-column-gap: $space-xxs;
+    position: relative;
+    border-bottom: 1px solid $border;
+    padding-bottom: $space-xs;
+    &-date {
+        grid-area: date;
+        text-align: left;
+        margin: 0;
+        font-size: 10px;
+    }
+    &::before {
+      content: "";
+      grid-area: picture;
+      border-radius: 100%;
+      background: $border;
+      background-repeat: no-repeat;
+      background-position: center;
+      background-size: contain;
+      height: 50px;
+      width: 50px;
+    }
+
+    &-delete {
+      display: block;
+      font-size: 20px !important;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+    }
+
+    &-title {
+      color: $category;
+      text-align: left;
+      margin-top: $space-half;
+      margin-bottom: $space-sm;
+    }
+    &-name {
+      font-family: $times;
+      font-size: $font-md;
+      font-weight: bold;
+      grid-area: name;
+      color: $black;
+    }
+
+    &-comment {
+      grid-area: comment;
+      margin-top: $space-xxs;
+      font-family: $times;
+      color: $text;
+      font-size: $font-sm;
+    }
+  }
+}

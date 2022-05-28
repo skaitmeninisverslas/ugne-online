@@ -1,0 +1,42 @@
+.RELATED {
+  border-top: 1px solid $border;
+  margin-top: $space-std;
+  @include media-breakpoint-down(sm) {
+    margin-top: $space-half;
+  }
+  &__title {
+    padding-top: $space-std;
+    @include media-breakpoint-down(sm) {
+      padding-top: $space-half;
+    }
+    &::after {
+      display: none;
+    }
+  }
+  &__posts {
+    margin-top: $space-half;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-column-gap: $space-lg;
+    grid-row-gap: $space-xl;
+
+    @include media-breakpoint-down(md) {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    @include media-breakpoint-down(sm) {
+      grid-template-columns: 1fr;
+      grid-column-gap: 0;
+      grid-row-gap: $space-md;
+    }
+
+    &-title {
+      &::after {
+        display: none !important;
+      }
+    }
+
+    &-post {
+    }
+  }
+}

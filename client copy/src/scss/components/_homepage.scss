@@ -1,0 +1,102 @@
+.CONTENT {
+  padding: 0px $space-xxl;
+
+  @include media-breakpoint-down(md) {
+    padding: 0px $space-lg;
+  }
+  @include media-breakpoint-down(sm) {
+    margin-top: 105px;
+    padding: 0px $space-xs $space-std $space-xs;
+  }
+  &__blog {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-column-gap: $space-lg;
+    grid-row-gap: $space-xl;
+    @include media-breakpoint-down(lg) {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+    @include media-breakpoint-down(md) {
+      grid-template-columns: 1fr 1fr;
+    }
+    @include media-breakpoint-down(sm) {
+      grid-template-columns: 1fr;
+      grid-column-gap: 0;
+      grid-row-gap: $space-md;
+    }
+    &-post {
+      width: 100%;
+      &:hover {
+        -webkit-animation-fill-mode: forwards !important;
+        animation: fadeOut;
+        animation-duration: .5s;
+      }
+      &-image {
+         text-decoration: none !important;
+         display: block;
+         background-repeat: no-repeat;
+         background-size: cover;
+         background-position: center;
+         width: 100%;
+         height: 0;
+         padding-bottom: 150%;
+      }
+      &-title {
+        padding-top: $space-xs;
+        margin-bottom: 0;
+        text-align: center;
+        font-size: $font-xl;
+        &::after {
+          content: '';
+          height: 1px;
+          margin: 0 auto;
+          background-color: $bar;
+          margin-top: $space-xs;
+          width: 25px;
+          display: block;
+        }
+      }
+      &-link {
+        text-decoration: none !important;
+      }
+      &-category {
+        font-size: $font-xs;
+        color: $category;
+        line-height: 1.5em;
+        font-family: $sans;
+        text-transform: none;
+        text-align: center;
+        display: block;
+        margin-top: $space-xs;
+        padding-bottom: $space-xs;
+        text-decoration: none !important;
+        &:hover {
+          color: $hover;
+        }
+        &:empty {
+          display: none;
+        }
+      }
+      &-date {
+        font-size: $font-xs;
+        margin: 0;
+        color: $category;
+        line-height: 1.5em;
+        font-family: $sans;
+        text-transform: none;
+        text-align: center;
+        padding-top: $space-xs;
+      }
+    }
+  }
+
+  &__category {
+    &-title {
+      text-align: center;
+      margin-bottom: $space-xl;
+      @include media-breakpoint-down(md) {
+        margin-bottom: $space-sm;
+      }
+    }
+  }
+}
