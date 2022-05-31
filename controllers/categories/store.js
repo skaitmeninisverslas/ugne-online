@@ -1,10 +1,13 @@
-const Categories = require('../../database/models/Categories');
+const Categories = require("../../database/models/Categories");
 
 module.exports = (req, res) => {
+  const authenticated = req.isAuthenticated();
 
-  if(req.session.userId) {
-    Categories.create({title: req.body.title}, (error, post) => {
-        res.redirect('/admin');
+  if (authenticated) {
+    Categories.create({ title: req.body.title }, (error, post) => {
+      res.redirect("/admin");
     });
-  } else {res.redirect('/login')}
-}
+  } else {
+    res.redirect("/login");
+  }
+};

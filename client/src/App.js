@@ -1,13 +1,14 @@
-import React from 'react';
-import { BrowserRouter, Route } from 'react-router-dom';
-import Homepage from './components/Homepage';
-import Admin from './components/admin/Admin';
-import Login from './components/Login';
-import Post from './components/Post';
-import Page from './components/Page';
-import Category from './components/Category';
+import React from "react";
+import { BrowserRouter, Route } from "react-router-dom";
 
-import './scss/app.scss';
+import { Homepage } from "./components/Homepage";
+import { Admin } from "./components/admin/Admin";
+import { Login } from "./components/Login";
+import { Post } from "./components/Post";
+import { Page } from "./components/Page";
+import { Category } from "./components/Category";
+
+import "./scss/app.scss";
 
 const App = () => {
   return (

@@ -1,147 +1,121 @@
-import React, { Component } from "react";
-import axios from "axios";
+import React from "react";
 
-class Menu extends Component {
-  constructor(props) {
-    super(props);
+export const Menu = ({ menu }) => {
+  return (
+    <div className="w-100">
+      <h2 className="text-center">Menu information</h2>
 
-    this.state = {
-      menu: [],
-    };
-  }
+      <form
+        className="mt-4"
+        action={`/api/menu/edit/${menu[0]._id}`}
+        key={menu[0]._id}
+        method="POST"
+        encType="multipart/form-data"
+      >
+        <div className="modal-header">
+          <img
+            className="rounded-circle"
+            width="75"
+            height="75"
+            src={menu[0].image}
+            alt=""
+          />
+          <h5 className="modal-title text-center" id="exampleModalLabel">
+            Edit menu information
+          </h5>
+        </div>
+        <div className="modal-body">
+          <div className="form-group">
+            <label>Title</label>
+            <input
+              className="form-control"
+              type="text"
+              name="title"
+              defaultValue={menu[0].title}
+              placeholder="Title"
+            />
+          </div>
 
-  componentDidMount() {
-    axios
-      .get(`/api/menu`)
-      .then((res) => {
-        const menu = res.data;
-        this.setState({ menu });
-      })
-      .catch(() => {
-        this.props.history.push("/login");
-      });
-  }
+          <div className="form-group">
+            <label>Email</label>
+            <input
+              className="form-control"
+              type="email"
+              name="email"
+              defaultValue={menu[0].email}
+              placeholder="Email"
+            />
+          </div>
 
-  render() {
-    return (
-      <div className="w-100">
-        <h2 className="text-center">Menu information</h2>
+          <div className="form-group">
+            <label>Sidebar description</label>
+            <input
+              className="form-control"
+              type="sidebar"
+              name="sidebar"
+              defaultValue={menu[0].sidebar}
+              placeholder="Email"
+            />
+          </div>
 
-        {this.state.menu.map((menus) => (
-          <form
-            className="mt-4"
-            action={`/api/menu/edit/${menus._id}`}
-            key={menus._id}
-            method="POST"
-            encType="multipart/form-data"
-          >
-            <div className="modal-header">
-              <img
-                className="rounded-circle"
-                width="75"
-                height="75"
-                src={menus.image}
-                alt=""
+          <div className="form-group">
+            <label>Facebook</label>
+            <input
+              className="form-control"
+              type="url"
+              name="facebook"
+              defaultValue={menu[0].socials.facebook}
+              placeholder="Facebook URL"
+            />
+          </div>
+
+          <div className="form-group">
+            <label>Instagram</label>
+            <input
+              className="form-control"
+              type="url"
+              name="instagram"
+              defaultValue={menu[0].socials.instagram}
+              placeholder="Instagram URL"
+            />
+          </div>
+
+          <div className="form-group">
+            <label>About</label>
+            <textarea
+              className="form-control"
+              name="about"
+              defaultValue={menu[0].about}
+              placeholder="Content ..."
+              cols="30"
+              rows="10"
+            ></textarea>
+          </div>
+
+          <div className="input-group">
+            <div className="input-group-prepend">
+              <span className="input-group-text">Upload</span>
+            </div>
+
+            <div className="form-group custom-file">
+              <input
+                className="custom-file-input"
+                type="file"
+                id="customFile"
+                name="image"
               />
-              <h5 className="modal-title text-center" id="exampleModalLabel">
-                Edit menu information
-              </h5>
+              <label className="custom-file-label" htmlFor="customFile">
+                Choose image
+              </label>
             </div>
-            <div className="modal-body">
-              <div className="form-group">
-                <label>Title</label>
-                <input
-                  className="form-control"
-                  type="text"
-                  name="title"
-                  defaultValue={menus.title}
-                  placeholder="Title"
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Email</label>
-                <input
-                  className="form-control"
-                  type="email"
-                  name="email"
-                  defaultValue={menus.email}
-                  placeholder="Email"
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Sidebar description</label>
-                <input
-                  className="form-control"
-                  type="sidebar"
-                  name="sidebar"
-                  defaultValue={menus.sidebar}
-                  placeholder="Email"
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Facebook</label>
-                <input
-                  className="form-control"
-                  type="url"
-                  name="facebook"
-                  defaultValue={menus.socials.facebook}
-                  placeholder="Facebook URL"
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Instagram</label>
-                <input
-                  className="form-control"
-                  type="url"
-                  name="instagram"
-                  defaultValue={menus.socials.instagram}
-                  placeholder="Instagram URL"
-                />
-              </div>
-
-              <div className="form-group">
-                <label>About</label>
-                <textarea
-                  className="form-control"
-                  name="about"
-                  defaultValue={menus.about}
-                  placeholder="Content ..."
-                  cols="30"
-                  rows="10"
-                ></textarea>
-              </div>
-
-              <div className="input-group">
-                <div class="input-group-prepend">
-                  <span class="input-group-text">Upload</span>
-                </div>
-
-                <div className="form-group custom-file">
-                  <input
-                    className="custom-file-input"
-                    type="file"
-                    id="customFile"
-                    name="image"
-                  />
-                  <label className="custom-file-label" htmlFor="customFile">
-                    Choose image
-                  </label>
-                </div>
-              </div>
-            </div>
-            <div className="modal-footer">
-              <button className="btn btn-success" type="submit">
-                <i className="fas fa-save"></i> Post
-              </button>
-            </div>
-          </form>
-        ))}
-      </div>
-    );
-  }
-}
-export default Menu;
+          </div>
+        </div>
+        <div className="modal-footer">
+          <button className="btn btn-success" type="submit">
+            <i className="fas fa-save"></i> Post
+          </button>
+        </div>
+      </form>
+    </div>
+  );
+};

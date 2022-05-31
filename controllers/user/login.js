@@ -1,31 +1,9 @@
-const bcrypt = require('bcryptjs')
-const User = require('../../database/models/User')
+const passport = require("passport");
 
-module.exports = (req, res) => {
-    const {
-        email,
-        password
-    } = req.body;
-    // try to find the user
-
-    User.findOne({
-        email
-    }, (error, user) => {
-        if (user) {
-            // compare passwords.
-            bcrypt.compare(password, user.password, (error, same) => {
-
-                if (same) {
-                    req.session.userId = user._id
-                    res.redirect('/admin')
-                } else {
-                    res.redirect('/login')
-
-                }
-            })
-        } else {
-          console.log(error)
-            res.redirect('/login')
-        }
-    })
-}
+module.exports = (req, res, next) => {
+  passport.authenticate("local", {
+    successRedirect: "/admin",
+    failureRedirect: "/login",
+    failureFlash: true,
+  })(req, res, next);
+};

@@ -1,10 +1,10 @@
-const Post = require("../../database/models/Post");
+const Subscribers = require("../../database/models/Subscribers");
 
 module.exports = (req, res) => {
   const authenticated = req.isAuthenticated();
 
   if (authenticated) {
-    Post.findByIdAndDelete(req.params.id, (err, doc) => {
+    Subscribers.findByIdAndDelete(req.params.id, (err, doc) => {
       if (!err) {
         res.redirect("/admin");
       } else {

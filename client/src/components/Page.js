@@ -1,79 +1,67 @@
-import React, { Component } from "react";
-import axios from "axios";
-import Header from "./Header";
-import Footer from "./Footer";
+import React, { Fragment, useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
-class Page extends Component {
-  constructor(props) {
-    super(props);
+import { Header } from "./Header";
+import { Footer } from "./Footer";
+import { itemNameFromLink } from "./helpers/constants";
+import { getAllData } from "./helpers/apiCalls";
 
-    this.state = {
-      page: [],
-      menu: [],
-    };
-  }
+export const Page = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [data, setData] = useState({});
 
-  componentDidMount() {
-    axios
-      .get(`/api${this.props.location.pathname}`)
-      .then((res) => {
-        const page = res.data.page;
-        this.setState({ page });
-      })
-      .catch();
+  const location = useLocation();
 
-    axios
-      .get(`/api/menu`)
-      .then((res) => {
-        const menu = res.data;
-        this.setState({ menu });
-      })
-      .catch(() => {
-        this.props.history.push("/");
-      });
-  }
+  useEffect(() => {
+    getAllData().then((res) => {
+      setData(res.data);
+      setIsLoading(false);
+    });
+  }, []);
 
-  render() {
-    return (
-      <div className="CONTENT">
-        {this.state.menu.map((menus) => (
-          <Header key={menus._id} menu={menus} />
-        ))}
+  const { categories, menu, pages } = data;
 
-        {!this.state.page.image && !this.state.page.subtitle ? (
-          <div className="PAGE">
-            <div className="PAGE__title no-image">{this.state.page.title}</div>
-            <div className="PAGE__content no-image">
-              {this.state.page.content}
-            </div>
-            {this.state.menu.map((menus) => (
+  const currentPage =
+    !isLoading &&
+    pages.find((item) => item.title === itemNameFromLink(location));
+
+  return (
+    <Fragment>
+      {!isLoading ? (
+        <div className="CONTENT">
+          <Header menu={menu[0]} categories={categories} pages={pages} />
+
+          {!currentPage.image && !currentPage.subtitle ? (
+            <div className="PAGE">
+              <div className="PAGE__title no-image">{currentPage.title}</div>
+              <div className="PAGE__content no-image">
+                {currentPage.content}
+              </div>
+
               <a
-                key={menus._id}
-                href={"mailto:" + menus.email}
+                key={menu[0]._id}
+                href={`mailto:${menu[0].email}`}
                 className="PAGE__email"
               >
-                {menus.email}
+                {menu[0].email}
               </a>
-            ))}
-          </div>
-        ) : (
-          <div className="PAGE">
-            <div className="PAGE__title image">{this.state.page.title}</div>
-            <img className="PAGE__image" src={this.state.page.image} alt="" />
-            <div className="PAGE__center">
-              <div className="PAGE__subtitle">{this.state.page.subtitle}</div>
-              <div className="PAGE__content image">
-                {this.state.page.content}
+            </div>
+          ) : (
+            <div className="PAGE">
+              <div className="PAGE__title image">{currentPage.title}</div>
+              <img className="PAGE__image" src={currentPage.image} alt="" />
+              <div className="PAGE__center">
+                <div className="PAGE__subtitle">{currentPage.subtitle}</div>
+                <div className="PAGE__content image">{currentPage.content}</div>
               </div>
             </div>
-          </div>
-        )}
+          )}
 
-        {this.state.menu.map((menus) => (
-          <Footer key={menus._id} menu={menus} />
-        ))}
-      </div>
-    );
-  }
-}
-export default Page;
+          <Footer menu={menu[0]} categories={categories} pages={pages} />
+        </div>
+      ) : (
+        <span className="LOADING">Loading...</span>
+      )}
+    </Fragment>
+  );
+};

@@ -1,3 +1,4 @@
 node_modules
 .env
 duombazes_backup
+index.production.js

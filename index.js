@@ -3,14 +3,17 @@ const path = require("path");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
-const expressSession = require("express-session");
+const session = require("express-session");
 const connectMongo = require("connect-mongo");
-const connectFlash = require("connect-flash");
-require("dotenv").config();
+const flash = require("express-flash");
+const passport = require("./passport/setup");
+const cors = require("cors");
+
+if (process.env.NODE_ENV !== "production") {
+  require("dotenv").config();
+}
 
 const app = new express();
-const uri = process.env.LOCALHOST;
-const demo = process.env.DEMO;
 const demo_external = process.env.DEMO_EXTERNAL;
 
 mongoose
@@ -18,24 +21,33 @@ mongoose
   .then(() => console.log("You are now connected to Mongo"))
   .catch((err) => console.error("Something went wrong", err));
 
-const mongoStore = connectMongo(expressSession);
+const mongoStore = connectMongo(session);
 
 app.use(
-  expressSession({
-    secret: "secret",
+  session({
+    secret: process.env.SESSION_SECRET,
     store: new mongoStore({
       mongooseConnection: mongoose.connection,
     }),
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
   })
 );
 
-app.use(connectFlash());
+app.use(flash());
 app.use(fileUpload());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use(
+  cors({
+    origin: "*",
+  })
+);
 
 require("./routes/routes")(app);
 

@@ -1,6 +1,6 @@
 module.exports = (req, res, next) => {
   if (
-    !req.files.image ||
+    !req.files ||
     !req.body.category ||
     !req.body.title ||
     !req.body.description ||

@@ -1,11 +1,7 @@
-const User = require('../database/models/User')
-
 module.exports = (req, res, next) => {
-    User.findById(req.session.userId, (error, user) => {
-        if (error || !user) {
-            return res.redirect('/login')
-        }
+  if (req.isAuthenticated()) {
+    return next();
+  }
 
-        next()
-    })
-}
+  res.redirect("/login");
+};
