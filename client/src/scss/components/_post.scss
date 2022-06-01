@@ -9,14 +9,15 @@
     width: 100%;
   }
 
-  &__date, &__category {
+  &__date,
+  &__category {
     text-align: center;
     margin-top: $space-md;
     font-family: $sans;
     font-size: $font-xs;
     line-height: 1.5em;
     font-weight: $normal;
-    letter-spacing: .02em;
+    letter-spacing: 0.02em;
     text-decoration: none !important;
     color: $category;
     margin-bottom: $space-xs;
@@ -32,7 +33,7 @@
       font-size: $font-lg;
     }
     &::after {
-      content: '';
+      content: "";
       display: block;
       width: 25px;
       height: 1px;
@@ -52,7 +53,6 @@
     &:hover {
       color: $hover;
     }
-
   }
 
   &__description {
@@ -211,7 +211,13 @@
           }
         }
         &-pictures {
-           margin-top: $space-sm;
+          margin-top: $space-sm;
+        }
+
+        &-permalink {
+          margin-top: $space-xs;
+          display: block;
+          width: 100%;
         }
 
         &-image {

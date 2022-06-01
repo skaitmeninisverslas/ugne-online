@@ -1,6 +1,6 @@
 import axios from "axios";
 
-import { ADMIN_LINK } from "./constants";
+import { ADMIN_LINK, INSTAGRAM_LINK } from "./constants";
 
 // CORE CALL
 const coreCall = axios.create({
@@ -11,3 +11,4 @@ const coreCall = axios.create({
 });
 
 export const getAllData = () => coreCall.get(ADMIN_LINK);
+export const getInstagramFeed = () => coreCall.get(INSTAGRAM_LINK);

@@ -1,26 +1,17 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useEffect } from "react";
 import { useHistory } from "react-router-dom";
 
-import { getAllData } from "./helpers/apiCalls";
+import { useData } from "../DataContext";
 
 export const Login = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [authenticated, setAuthenticated] = useState(false);
-
+  const { authenticated, isLoading } = useData();
   const history = useHistory();
 
   useEffect(() => {
-    getAllData().then((res) => {
-      setIsLoading(false);
-
-      const isAuthenticated = res.data.authenticated;
-
-      if (isAuthenticated) {
-        setAuthenticated(isAuthenticated);
-        history.push("/admin");
-      }
-    });
-  }, [history]);
+    if (authenticated) {
+      history.push("/admin");
+    }
+  }, [authenticated, history]);
 
   return (
     <Fragment>

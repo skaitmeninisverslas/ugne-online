@@ -1,25 +1,16 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment } from "react";
 import { useLocation } from "react-router-dom";
 
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { itemNameFromLink } from "./helpers/constants";
-import { getAllData } from "./helpers/apiCalls";
+import { useData } from "../DataContext";
 
 export const Page = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState({});
-
   const location = useLocation();
+  const { data, isLoading } = useData();
 
-  useEffect(() => {
-    getAllData().then((res) => {
-      setData(res.data);
-      setIsLoading(false);
-    });
-  }, []);
-
-  const { categories, menu, pages } = data;
+  const { menu, pages } = data;
 
   const currentPage =
     !isLoading &&
@@ -29,7 +20,7 @@ export const Page = () => {
     <Fragment>
       {!isLoading ? (
         <div className="CONTENT">
-          <Header menu={menu[0]} categories={categories} pages={pages} />
+          <Header />
 
           {!currentPage.image && !currentPage.subtitle ? (
             <div className="PAGE">
@@ -38,11 +29,7 @@ export const Page = () => {
                 {currentPage.content}
               </div>
 
-              <a
-                key={menu[0]._id}
-                href={`mailto:${menu[0].email}`}
-                className="PAGE__email"
-              >
+              <a href={`mailto:${menu[0].email}`} className="PAGE__email">
                 {menu[0].email}
               </a>
             </div>
@@ -57,7 +44,7 @@ export const Page = () => {
             </div>
           )}
 
-          <Footer menu={menu[0]} categories={categories} pages={pages} />
+          <Footer />
         </div>
       ) : (
         <span className="LOADING">Loading...</span>

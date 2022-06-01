@@ -31,6 +31,10 @@ app.use(
     }),
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      // Session expires after 1 hour of inactivity.
+      expires: 60 * 1000 * 36,
+    },
   })
 );
 

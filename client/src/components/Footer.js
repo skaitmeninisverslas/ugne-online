@@ -1,6 +1,12 @@
 import React from "react";
 
-export const Footer = ({ categories, pages, menu }) => {
+import { useData } from "../DataContext";
+
+export const Footer = () => {
+  const {
+    data: { menu, categories, pages },
+  } = useData();
+
   return (
     <div className="FOOTER">
       <div className="FOOTER__information">
@@ -19,10 +25,13 @@ export const Footer = ({ categories, pages, menu }) => {
         </form>
       </div>
       <div className="MENU__information-social FOOTER__social">
-        <a className="MENU__information-margin" href={menu.socials.instagram}>
+        <a
+          className="MENU__information-margin"
+          href={menu[0].socials.instagram}
+        >
           <i className="fab fa-instagram"></i>
         </a>
-        <a href={menu.socials.facebook}>
+        <a href={menu[0].socials.facebook}>
           <i className="fab fa-facebook"></i>
         </a>
       </div>

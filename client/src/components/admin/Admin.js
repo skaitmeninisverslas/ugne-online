@@ -8,8 +8,8 @@ import { Menu } from "./Menu";
 import { Subscribers } from "./Subscribers";
 import { Pages } from "./Pages";
 import { Comments } from "./Comments";
-import { getAllData } from "../helpers/apiCalls";
 import { setLocalStorageForComponent } from "../helpers/constants";
+import { useData } from "../../DataContext";
 
 import "jquery/dist/jquery.min.js";
 import "bootstrap/dist/js/bootstrap.min.js";
@@ -17,25 +17,17 @@ import "popper.js/dist/popper.min.js";
 
 export const Admin = () => {
   const [component, setComponent] = useState(setLocalStorageForComponent);
-  const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState({});
-  const [authenticated, setAuthenticated] = useState(false);
+  const { authenticated, isLoading, data } = useData();
 
   const history = useHistory();
 
   const { categories, menu, post, pages, subscriber, comments, user } = data;
 
   useEffect(() => {
-    getAllData().then((res) => {
-      setData(res.data);
-      setIsLoading(false);
-
-      const isAuthenticated = res.data.authenticated;
-      isAuthenticated
-        ? setAuthenticated(isAuthenticated)
-        : history.push("/login");
-    });
-  }, [history]);
+    if (!authenticated) {
+      history.push("/login");
+    }
+  }, [authenticated, history]);
 
   useEffect(() => {
     localStorage.setItem("component", JSON.stringify(component));

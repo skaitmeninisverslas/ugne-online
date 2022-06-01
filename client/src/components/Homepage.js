@@ -1,27 +1,19 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment } from "react";
 
-import { getAllData } from "./helpers/apiCalls";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
+import { useData } from "../DataContext";
 
 export const Homepage = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState({});
+  const { data, isLoading } = useData();
 
-  useEffect(() => {
-    getAllData().then((res) => {
-      setData(res.data);
-      setIsLoading(false);
-    });
-  }, []);
-
-  const { categories, menu, post, pages } = data;
+  const { categories, post } = data;
 
   return (
     <Fragment>
       {!isLoading ? (
         <div className="CONTENT">
-          <Header menu={menu[0]} categories={categories} pages={pages} />
+          <Header />
 
           <ul className="CONTENT__blog">
             {post.map((item, key) => {
@@ -63,7 +55,7 @@ export const Homepage = () => {
             })}
           </ul>
 
-          <Footer menu={menu[0]} categories={categories} pages={pages} />
+          <Footer />
         </div>
       ) : (
         <span className="LOADING">Loading...</span>

@@ -5,24 +5,21 @@ import { useLocation } from "react-router-dom";
 import { Header } from "./Header";
 import { Footer } from "./Footer";
 import { itemNameFromLink } from "./helpers/constants";
-import { getAllData } from "./helpers/apiCalls";
+import { useData } from "../DataContext";
+import { getInstagramFeed } from "./helpers/apiCalls";
 
 export const Post = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [data, setData] = useState({});
-  const [authenticated, setAuthenticated] = useState(false);
-
   const location = useLocation();
+  const { data, isLoading, authenticated } = useData();
+  const [feed, setFeed] = useState();
 
   useEffect(() => {
-    getAllData().then((res) => {
-      setData(res.data);
-      setIsLoading(false);
-      setAuthenticated(res.data.authenticated);
+    getInstagramFeed().then((res) => {
+      setFeed(res.data.data);
     });
   }, []);
 
-  const { categories, comments, menu, post, pages } = data;
+  const { categories, comments, menu, post } = data;
 
   const currentPost =
     !isLoading &&
@@ -45,7 +42,7 @@ export const Post = () => {
     <Fragment>
       {!isLoading ? (
         <div className="CONTENT">
-          <Header menu={menu[0]} categories={categories} pages={pages} />
+          <Header />
 
           <div className="POST__center">
             <img className="POST__image" src={currentPost.image} alt="" />
@@ -191,16 +188,22 @@ export const Post = () => {
                   @ugne.online
                 </a>
 
-                {/* <div className="POST__sidebar-recent-instagram-pictures">
-              {this.state.feed.map((item) => (
-                <img
-                  key={item.node.id}
-                  className="POST__sidebar-recent-instagram-image"
-                  src={item.node.thumbnail_src}
-                  alt=""
-                />
-              ))}
-            </div> */}
+                <div className="POST__sidebar-recent-instagram-pictures">
+                  {feed &&
+                    feed.slice(0, 4).map((item, key) => (
+                      <a
+                        className="POST__sidebar-recent-instagram-permalink"
+                        key={key}
+                        href={item.permalink}
+                      >
+                        <img
+                          className="POST__sidebar-recent-instagram-image"
+                          src={item.media_url}
+                          alt=""
+                        />
+                      </a>
+                    ))}
+                </div>
               </div>
             </div>
           </div>
@@ -237,7 +240,7 @@ export const Post = () => {
             </ul>
           </div>
 
-          <Footer categories={categories} pages={pages} menu={menu[0]} />
+          <Footer />
         </div>
       ) : (
         <span className="LOADING">Loading...</span>
