@@ -1,335 +1,96 @@
-import React from "react";
+import React, { useState } from "react";
+
+import { AddEditPostModal } from "./components/AddEditPostModal";
+import { DeletePostModal } from "./components/DeletePostModal";
 
 export const Posts = ({ posts, categories }) => {
+  const [modalData, setModalData] = useState();
+  const [isEdit, setIsEdit] = useState(false);
+  const [isAddEditOpen, setIsAddEditOpen] = useState(false);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isPosts, setIsPosts] = useState(false);
+
+  const postsSortedByDescDate = posts.reverse();
+
   return (
     <div className="w-100">
       <h2 className="text-center">All Posts</h2>
+
       <button
         className="btn btn-light mt-4"
-        data-toggle="modal"
-        data-target="#createPost"
+        onClick={() => {
+          setIsAddEditOpen(true);
+          setIsPosts(true);
+        }}
       >
         <i className="fas fa-plus"></i> New Post
       </button>
+
       <ul className="mt-4 p-0">
-        {posts.map((post, key) => (
-          <li className="card mt-2 p-3" key={key} value={post.title}>
-            <div className="card-body row">
-              <div className="col-11">
-                <div className="card-title border-bottom pb-2 font-weight-bold">
-                  {post.title}
-                </div>
-                <div className="card-subtitle text-muted">
-                  {post.description}
-                </div>
-              </div>
+        {postsSortedByDescDate.map((post, key) => {
+          const { title, description, _id: id } = post;
 
-              <div className="d-flex flex-column ml-auto border-left pl-4">
-                <button
-                  data-toggle="modal"
-                  data-target={`#edit${post._id}`}
-                  className="btn btn-primary"
-                >
-                  <i className="fas fa-pen"></i>
-                </button>
-                <button
-                  data-toggle="modal"
-                  data-target={`#delete${post._id}`}
-                  className="btn btn-danger mt-2"
-                >
-                  <i className="fas fa-trash"></i>
-                </button>
-              </div>
-            </div>
-
-            <div
-              className="modal fade"
-              id={`delete${post._id}`}
-              tabIndex="-1"
-              role="dialog"
-              aria-labelledby="exampleModalLabel"
-              aria-hidden="true"
-            >
-              <div
-                className="modal-dialog modal-dialog-centered"
-                role="document"
-              >
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h5
-                      className="modal-title text-center"
-                      id="exampleModalLabel"
-                    >
-                      Warning!
-                    </h5>
-                    <button
-                      type="button"
-                      className="close"
-                      data-dismiss="modal"
-                      aria-label="Close"
-                    >
-                      <span aria-hidden="true">&times;</span>
-                    </button>
+          return (
+            <li className="card mt-2 p-3" key={key} value={title}>
+              <div className="card-body row">
+                <div className="col-11">
+                  <div className="card-title border-bottom pb-2 font-weight-bold">
+                    {title}
                   </div>
-                  <div className="modal-body">
-                    Are you sure, do you want to delete post: {post.title}
-                  </div>
-                  <div className="modal-footer">
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      data-dismiss="modal"
-                    >
-                      Cancel
-                    </button>
-                    <a
-                      type="button"
-                      href={`/api/post/delete/${post._id}`}
-                      className="btn btn-danger"
-                    >
-                      Delete
-                    </a>
-                  </div>
+                  <div className="card-subtitle text-muted">{description}</div>
                 </div>
-              </div>
-            </div>
 
-            <div
-              className="modal fade"
-              id={`edit${post._id}`}
-              tabIndex="-1"
-              role="dialog"
-              aria-labelledby="exampleModalLabel"
-              aria-hidden="true"
-            >
-              <div
-                className="modal-dialog modal-dialog-centered"
-                role="document"
-              >
-                <div className="modal-content">
-                  <form
-                    className="mt-4"
-                    action={`/api/post/edit/${post._id}`}
-                    method="POST"
-                    encType="multipart/form-data"
+                <div className="d-flex flex-column ml-auto border-left pl-4">
+                  <button
+                    onClick={() => {
+                      setModalData(post);
+                      setIsEdit(true);
+                      setIsAddEditOpen(true);
+                      setIsPosts(true);
+                    }}
+                    className="btn btn-primary"
                   >
-                    <div className="modal-header">
-                      <h5
-                        className="modal-title text-center"
-                        id="exampleModalLabel"
-                      >
-                        Edit {post.title}
-                      </h5>
-                      <button
-                        type="button"
-                        className="close"
-                        data-dismiss="modal"
-                        aria-label="Close"
-                      >
-                        <span aria-hidden="true">&times;</span>
-                      </button>
-                    </div>
-                    <div className="modal-body">
-                      <div className="form-group">
-                        <label>Title</label>
-                        <input
-                          className="form-control"
-                          type="text"
-                          name="title"
-                          placeholder="Title"
-                          defaultValue={post.title}
-                        />
-                      </div>
+                    <i className="fas fa-pen"></i>
+                  </button>
 
-                      <div className="form-group">
-                        <label>Category</label>
-                        <select
-                          className="form-control"
-                          name="category"
-                          defaultValue={post.category}
-                        >
-                          {categories.map((category, key) => (
-                            <option key={key} value={category._id}>
-                              {category.title}
-                            </option>
-                          ))}
-                        </select>
-                      </div>
-
-                      <div className="form-group">
-                        <label>Description</label>
-                        <input
-                          className="form-control"
-                          type="text"
-                          name="description"
-                          placeholder="Description"
-                          defaultValue={post.description}
-                        />
-                      </div>
-
-                      <div className="form-group">
-                        <label>Content</label>
-                        <textarea
-                          className="form-control mb-3"
-                          name="content"
-                          placeholder="Content ..."
-                          cols="30"
-                          rows="10"
-                          defaultValue={post.content}
-                        ></textarea>
-                        <img
-                          src={post.image}
-                          className="rounded d-block m-auto"
-                          width="200"
-                          alt=""
-                        />
-                      </div>
-
-                      <div className="input-group">
-                        <div className="input-group-prepend">
-                          <span className="input-group-text">Upload</span>
-                        </div>
-                        <div className="form-group custom-file">
-                          <input
-                            className="custom-file-input"
-                            type="file"
-                            id="customFile"
-                            name="image"
-                          />
-                          <label
-                            className="custom-file-label"
-                            htmlFor="customFile"
-                          >
-                            Choose image
-                          </label>
-                        </div>
-                      </div>
-                    </div>
-                    <div className="modal-footer">
-                      <button
-                        type="button"
-                        className="btn btn-secondary"
-                        data-dismiss="modal"
-                      >
-                        Cancel
-                      </button>
-                      <button className="btn btn-success" type="submit">
-                        <i className="fas fa-save"></i> Save
-                      </button>
-                    </div>
-                  </form>
+                  <button
+                    className="btn btn-danger mt-2"
+                    onClick={() => {
+                      setModalData({ id, title });
+                      setIsDeleteOpen(true);
+                    }}
+                  >
+                    <i className="fas fa-trash"></i>
+                  </button>
                 </div>
               </div>
-            </div>
-          </li>
-        ))}
+            </li>
+          );
+        })}
       </ul>
-      <div
-        className="modal fade"
-        id="createPost"
-        tabIndex="-1"
-        role="dialog"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-dialog-centered" role="document">
-          <div className="modal-content">
-            <form
-              className="mt-4"
-              action={`/api/posts/store`}
-              method="POST"
-              encType="multipart/form-data"
-            >
-              <div className="modal-header">
-                <h5 className="modal-title text-center" id="exampleModalLabel">
-                  Create New Post
-                </h5>
-                <button
-                  type="button"
-                  className="close"
-                  data-dismiss="modal"
-                  aria-label="Close"
-                >
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div className="modal-body">
-                <div className="form-group">
-                  <label>Title</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    name="title"
-                    placeholder="Title"
-                  />
-                </div>
 
-                <div className="form-group">
-                  <label>Category</label>
-                  <select className="form-control" name="category">
-                    {categories.map((category, key) => (
-                      <option key={key} value={category._id}>
-                        {category.title}
-                      </option>
-                    ))}
-                  </select>
-                </div>
+      {isAddEditOpen && (
+        <AddEditPostModal
+          categories={categories}
+          data={modalData}
+          isEdit={isEdit}
+          setIsEdit={setIsEdit}
+          setIsAddEditOpen={setIsAddEditOpen}
+          isPosts={isPosts}
+          setIsPosts={setIsPosts}
+        />
+      )}
 
-                <div className="form-group">
-                  <label>Description</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    name="description"
-                    placeholder="Description"
-                  />
-                </div>
-
-                <div className="form-group">
-                  <label>Content</label>
-                  <textarea
-                    className="form-control"
-                    name="content"
-                    placeholder="Content ..."
-                    cols="30"
-                    rows="10"
-                  ></textarea>
-                </div>
-
-                <div className="input-group">
-                  <div className="input-group-prepend">
-                    <span className="input-group-text">Upload</span>
-                  </div>
-
-                  <div className="form-group custom-file">
-                    <input
-                      className="custom-file-input"
-                      type="file"
-                      id="customFile"
-                      name="image"
-                    />
-                    <label className="custom-file-label" htmlFor="customFile">
-                      Choose image
-                    </label>
-                  </div>
-                </div>
-              </div>
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  data-dismiss="modal"
-                >
-                  Cancel
-                </button>
-                <button className="btn btn-success" type="submit">
-                  <i className="fas fa-save"></i> Post
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      </div>
+      {isDeleteOpen && (
+        <DeletePostModal
+          id={modalData.id}
+          title={modalData.title}
+          isDeleteOpen={isDeleteOpen}
+          setIsDeleteOpen={setIsDeleteOpen}
+          isPosts={isPosts}
+          setIsPosts={setIsPosts}
+        />
+      )}
     </div>
   );
 };

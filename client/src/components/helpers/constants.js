@@ -14,3 +14,8 @@ export const setLocalStorageForComponent = () => {
   const initialValue = JSON.parse(savedComponent);
   return initialValue || "posts";
 };
+
+export const getFileFromInput = (event) => event.currentTarget.files[0];
+export const createUrlForLocalImage = (item) => URL.createObjectURL(item);
+export const trimmedLocalImageUrl = (item) =>
+  createUrlForLocalImage(item).substring(5);

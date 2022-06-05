@@ -2,7 +2,6 @@ const express = require("express");
 const path = require("path");
 const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
-const fileUpload = require("express-fileupload");
 const session = require("express-session");
 const connectMongo = require("connect-mongo");
 const flash = require("express-flash");
@@ -39,7 +38,6 @@ app.use(
 );
 
 app.use(flash());
-app.use(fileUpload());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -55,7 +53,7 @@ app.use(
 
 require("./routes/routes")(app);
 
-process.env.NODE_ENV = "production";
+process.env.NODE_ENV = "development";
 
 if (process.env.NODE_ENV === "production") {
   const path = require("path");

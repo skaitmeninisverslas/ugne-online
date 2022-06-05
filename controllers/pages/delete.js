@@ -6,9 +6,9 @@ module.exports = (req, res) => {
   if (authenticated) {
     Page.findByIdAndDelete(req.params.id, (err, doc) => {
       if (!err) {
-        res.redirect("/admin");
+        res.status(200).send("Page deleted");
       } else {
-        res.redirect("/login");
+        res.status(400).send("An error ocurred");
       }
     });
   } else {

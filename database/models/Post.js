@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const PostSchema = new mongoose.Schema({
   title: String,
@@ -6,19 +6,24 @@ const PostSchema = new mongoose.Schema({
   content: String,
   category: {
     type: mongoose.Schema.Types.String,
-    ref: 'Categories'
+    ref: "Categories",
   },
   author: {
     type: String,
-    ref: 'User'
+    ref: "User",
   },
   image: String,
+  ogimage: String,
+  metitle: String,
+  ogtitle: String,
+  medescription: String,
+  ogdescription: String,
   createdAt: {
     type: Date,
-    default: new Date()
-  }
+    default: new Date(),
+  },
 });
 
-const Post = mongoose.model('Post', PostSchema);
+const Post = mongoose.model("Post", PostSchema);
 
 module.exports = Post;
