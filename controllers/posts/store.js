@@ -5,21 +5,11 @@ const User = require("../../database/models/User");
 
 module.exports = async (req, res) => {
   const authenticated = req.isAuthenticated();
-  const {
-    title,
-    category,
-    content,
-    description,
-    metitle,
-    medescription,
-    ogtitle,
-    ogdescription,
-  } = req.body;
 
   if (authenticated) {
     const user = await User.findById(req.user.id);
 
-    const host = req.host;
+    const host = req.hostname;
 
     let image = {};
     let ogimage = {};
@@ -48,20 +38,16 @@ module.exports = async (req, res) => {
 
     Post.create(
       {
-        title,
-        content,
-        description,
-        author: user.username,
-        category,
-        metitle,
-        medescription,
-        ogtitle,
-        ogdescription,
+        ...req.body,
         ...image,
         ...ogimage,
       },
       (error, post) => {
-        res.status(200).send("Post saved");
+        if (!error) {
+          res.status(200).send("Deleted");
+        } else {
+          res.status(400).send("An error ocurred", error);
+        }
       }
     );
   } else {

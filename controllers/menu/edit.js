@@ -1,57 +1,43 @@
 const Menu = require("../../database/models/Menu");
-const path = require("path");
 
 module.exports = async (req, res) => {
   const authenticated = req.isAuthenticated();
 
+  const { title, email, about, sidebar, facebook, instagram } = req.body;
+
   if (authenticated) {
-    if (!req.files) {
-      const menuEdit = {
-        title: req.body.title,
-        email: req.body.email,
-        about: req.body.about,
-        sidebar: req.body.sidebar,
-        socials: {
-          facebook: req.body.facebook,
-          instagram: req.body.instagram,
-        },
+    const host = req.hostname;
+
+    let image = {};
+
+    if (req.file) {
+      image = {
+        image: `${req.protocol}://${host}:3000/uploads/${req.file.path
+          .split("\\")
+          .slice(3)}`,
+        image_type: req.file.mimetype,
       };
-
-      Menu.findByIdAndUpdate(req.params.id, menuEdit, (err, post) => {
-        if (!err) {
-          res.redirect("/admin");
-        } else {
-          console.log(err);
-        }
-      });
-    } else {
-      const { image } = req.files;
-
-      image.mv(
-        path.resolve(__dirname, "..", "..", "client/build/images", image.name),
-        (error) => {
-          const menuEdit = {
-            title: req.body.title,
-            email: req.body.email,
-            about: req.body.about,
-            sidebar: req.body.sidebar,
-            socials: {
-              facebook: req.body.facebook,
-              instagram: req.body.instagram,
-            },
-            image: `/images/${image.name}`,
-          };
-
-          Menu.findByIdAndUpdate(req.params.id, menuEdit, (err, post) => {
-            if (!err) {
-              res.redirect("/admin");
-            } else {
-              console.log(err);
-            }
-          });
-        }
-      );
     }
+
+    const menuEdit = {
+      title,
+      email,
+      about,
+      sidebar,
+      socials: {
+        facebook,
+        instagram,
+      },
+      ...image,
+    };
+
+    Menu.findByIdAndUpdate(req.params.id, menuEdit, (error, post) => {
+      if (!error) {
+        res.status(200).send("MENU_EDITED");
+      } else {
+        res.status(400).send("NOT_SAVED");
+      }
+    });
   } else {
     res.redirect("/login");
   }

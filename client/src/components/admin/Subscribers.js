@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
+import { DeleteModal } from "./components/modals/DeleteModal";
 
 export const Subscribers = ({ subscribers }) => {
+  const [modalData, setModalData] = useState();
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isSubscriber, setIsSubscriber] = useState(false);
+
   return (
     <div className="w-100">
       <h2 className="text-center">Subscribers</h2>
@@ -11,68 +16,29 @@ export const Subscribers = ({ subscribers }) => {
             {`${item.email} `}
 
             <button
-              className="btn btn-danger float-right"
-              data-toggle="modal"
-              data-target={`#delete${item._id}`}
+              className="btn btn-danger"
+              onClick={() => {
+                setModalData({ id: item._id, title: item.email });
+                setIsDeleteOpen(true);
+                setIsSubscriber(true);
+              }}
             >
               <i className="fas fa-trash"></i>
             </button>
-
-            <div
-              className="modal fade"
-              id={`delete${item._id}`}
-              tabIndex="-1"
-              role="dialog"
-              aria-labelledby="exampleModalLabel"
-              aria-hidden="true"
-            >
-              <div
-                className="modal-dialog modal-dialog-centered"
-                role="document"
-              >
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h5
-                      className="modal-title text-center"
-                      id="exampleModalLabel"
-                    >
-                      Warning!
-                    </h5>
-                    <button
-                      type="button"
-                      className="close"
-                      data-dismiss="modal"
-                      aria-label="Close"
-                    >
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div className="modal-body">
-                    Are you sure, do you want to delete subscriber:
-                    {item.email}
-                  </div>
-                  <div className="modal-footer">
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      data-dismiss="modal"
-                    >
-                      Cancel
-                    </button>
-                    <a
-                      type="button"
-                      href={`/api/subscribers/delete/${item._id}`}
-                      className="btn btn-danger"
-                    >
-                      Delete
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
           </li>
         ))}
       </ul>
+
+      {isDeleteOpen && (
+        <DeleteModal
+          id={modalData.id}
+          title={modalData.title}
+          isDeleteOpen={isDeleteOpen}
+          setIsDeleteOpen={setIsDeleteOpen}
+          isSubscriber={isSubscriber}
+          setIsSubscriber={setIsSubscriber}
+        />
+      )}
     </div>
   );
 };

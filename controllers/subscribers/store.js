@@ -4,19 +4,12 @@ module.exports = (req, res) => {
   const subscribe = req.body.subscribe;
 
   Subscribers.findOne({ email: subscribe }, (error, subscriber) => {
-    if (subscriber) {
-      if (subscribe != subscriber.email) {
-        Subscribers.create({ email: subscribe }, (error, post) => {
-          res.redirect("/");
-        });
-      } else {
-        res.redirect("/");
-      }
-    } else {
+    if ((subscriber && subscribe != subscriber.email) || !subscriber) {
       Subscribers.create({ email: subscribe }, (error, post) => {
-        res.redirect("/");
+        res.status(200).send("SUBSCRIBED");
       });
-      console.log(error);
+    } else {
+      res.status(400).send("USER_EXISTS");
     }
   });
 };

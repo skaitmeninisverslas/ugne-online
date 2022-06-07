@@ -4,8 +4,12 @@ module.exports = (req, res) => {
   const authenticated = req.isAuthenticated();
 
   if (authenticated) {
-    Categories.create({ title: req.body.title }, (error, post) => {
-      res.redirect("/admin");
+    Categories.create({ ...req.body }, (error, post) => {
+      if (!error) {
+        res.status(200).send("Category saved");
+      } else {
+        res.status(400).send("An error ocurred", error);
+      }
     });
   } else {
     res.redirect("/login");

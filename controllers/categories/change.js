@@ -7,11 +7,11 @@ module.exports = (req, res) => {
     Categories.findByIdAndUpdate(
       req.params.id,
       { ...req.body },
-      (err, post) => {
-        if (!err) {
-          res.redirect("/admin");
+      (error, post) => {
+        if (!error) {
+          res.status(200).send("Category edited");
         } else {
-          res.redirect("/category/edit/" + req.body.title);
+          res.status(400).send("An error ocurred", error);
         }
       }
     );

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
-import { AddEditPostModal } from "./components/AddEditPostModal";
-import { DeletePostModal } from "./components/DeletePostModal";
+import { AddEditPostPageModal } from "./components/modals/AddEditPostPageModal";
+import { DeleteModal } from "./components/modals/DeleteModal";
 
 export const Posts = ({ posts, categories }) => {
   const [modalData, setModalData] = useState();
@@ -70,7 +70,7 @@ export const Posts = ({ posts, categories }) => {
       </ul>
 
       {isAddEditOpen && (
-        <AddEditPostModal
+        <AddEditPostPageModal
           categories={categories}
           data={modalData}
           isEdit={isEdit}
@@ -82,7 +82,7 @@ export const Posts = ({ posts, categories }) => {
       )}
 
       {isDeleteOpen && (
-        <DeletePostModal
+        <DeleteModal
           id={modalData.id}
           title={modalData.title}
           isDeleteOpen={isDeleteOpen}

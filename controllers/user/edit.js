@@ -1,45 +1,36 @@
-const User = require("../../database/models/User");
 const path = require("path");
+
+const User = require("../../database/models/User");
 
 module.exports = async (req, res) => {
   const authenticated = req.isAuthenticated();
 
   if (authenticated) {
-    if (!req.files) {
-      const userEdit = {
-        username: req.body.username,
-        email: req.body.email,
+    const host = req.hostname;
+
+    let image = {};
+
+    if (req.file) {
+      image = {
+        image: `${req.protocol}://${host}:3000/uploads/${req.file.path
+          .split("\\")
+          .slice(3)}`,
+        image_type: req.file.mimetype,
       };
-
-      User.findByIdAndUpdate(req.user.id, userEdit, (err, post) => {
-        if (!err) {
-          res.redirect("/admin");
-        } else {
-          console.log(err);
-        }
-      });
-    } else {
-      const { image } = req.files;
-
-      image.mv(
-        path.resolve(__dirname, "..", "..", "client/build/images", image.name),
-        (error) => {
-          const userEdit = {
-            username: req.body.username,
-            email: req.body.email,
-            image: `/images/${image.name}`,
-          };
-
-          User.findByIdAndUpdate(req.user.id, userEdit, (err, post) => {
-            if (!err) {
-              res.redirect("/admin");
-            } else {
-              console.log(err);
-            }
-          });
-        }
-      );
     }
+
+    const userEdit = {
+      ...req.body,
+      ...image,
+    };
+
+    User.findByIdAndUpdate(req.user.id, userEdit, (error, post) => {
+      if (!error) {
+        res.status(200).send("USER_EDITED");
+      } else {
+        res.status(400).send("NOT_SAVED");
+      }
+    });
   } else {
     res.redirect("/login");
   }

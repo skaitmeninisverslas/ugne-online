@@ -1,14 +1,23 @@
-import React from "react";
+import React, { useState } from "react";
+import { AddEditCategoryModal } from "./components/modals/AddEditCategoryModal";
+import { DeleteModal } from "./components/modals/DeleteModal";
 
 export const Categories = ({ categories }) => {
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isCategory, setIsCategory] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [isAddEditOpen, setIsAddEditOpen] = useState(false);
+  const [modalData, setModalData] = useState();
+
   return (
     <div className="">
       <h2 className="text-center">Categories</h2>
 
       <button
         className="btn btn-light mt-4"
-        data-toggle="modal"
-        data-target="#createCategory"
+        onClick={() => {
+          setIsAddEditOpen(true);
+        }}
       >
         <i className="fas fa-plus"></i> New Category
       </button>
@@ -24,197 +33,50 @@ export const Categories = ({ categories }) => {
               <div className="d-flex flex-column ml-auto border-left pl-4">
                 <button
                   className="btn btn-primary"
-                  data-toggle="modal"
-                  data-target={`#edit${category._id}`}
+                  onClick={() => {
+                    setModalData(category);
+                    setIsAddEditOpen(true);
+                    setIsEdit(true);
+                  }}
                 >
                   <i className="fas fa-pen"></i>
                 </button>
 
                 <button
                   className="btn btn-danger mt-2"
-                  data-toggle="modal"
-                  data-target={`#delete${category._id}`}
+                  onClick={() => {
+                    setModalData({ id: category._id, title: category.title });
+                    setIsDeleteOpen(true);
+                    setIsCategory(true);
+                  }}
                 >
                   <i className="fas fa-trash"></i>
                 </button>
-
-                <div
-                  className="modal fade"
-                  id={`delete${category._id}`}
-                  tabIndex="-1"
-                  role="dialog"
-                  aria-labelledby="exampleModalLabel"
-                  aria-hidden="true"
-                >
-                  <div
-                    className="modal-dialog modal-dialog-centered"
-                    role="document"
-                  >
-                    <div className="modal-content">
-                      <div className="modal-header">
-                        <h5
-                          className="modal-title text-center"
-                          id="exampleModalLabel"
-                        >
-                          Warning!
-                        </h5>
-                        <button
-                          type="button"
-                          className="close"
-                          data-dismiss="modal"
-                          aria-label="Close"
-                        >
-                          <span aria-hidden="true">&times;</span>
-                        </button>
-                      </div>
-                      <div className="modal-body">
-                        Are you sure, do you want to delete category:
-                        {category.title}
-                      </div>
-                      <div className="modal-footer">
-                        <button
-                          type="button"
-                          className="btn btn-secondary"
-                          data-dismiss="modal"
-                        >
-                          Cancel
-                        </button>
-                        <a
-                          type="button"
-                          href={`/api/category/delete/${category._id}`}
-                          className="btn btn-danger"
-                        >
-                          Delete
-                        </a>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div
-                  className="modal fade"
-                  id={`edit${category._id}`}
-                  tabIndex="-1"
-                  role="dialog"
-                  aria-labelledby="exampleModalLabel"
-                  aria-hidden="true"
-                >
-                  <div
-                    className="modal-dialog modal-dialog-centered"
-                    role="document"
-                  >
-                    <div className="modal-content">
-                      <form
-                        className="container jumbotron py-0 my-auto"
-                        action={`/api/category/change/${category._id}`}
-                        method="POST"
-                        encType="multipart/form-data"
-                      >
-                        <div className="modal-header text-center">
-                          <h5
-                            className="modal-title text-center"
-                            id="exampleModalLabel"
-                          >
-                            Edit Category
-                          </h5>
-                          <button
-                            type="button"
-                            className="close"
-                            data-dismiss="modal"
-                            aria-label="Close"
-                          >
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div className="modal-body">
-                          <div className="form-group mt-3">
-                            <label>Title</label>
-                            <input
-                              className="form-control"
-                              type="text"
-                              name="title"
-                              placeholder="Title"
-                              defaultValue={category.title}
-                            />
-                          </div>
-                        </div>
-                        <div className="modal-footer">
-                          <button
-                            type="button"
-                            className="btn btn-secondary"
-                            data-dismiss="modal"
-                          >
-                            Cancel
-                          </button>
-                          <button className="btn btn-success" type="submit">
-                            <i className="fas fa-save"></i> Save
-                          </button>
-                        </div>
-                      </form>
-                    </div>
-                  </div>
-                </div>
               </div>
             </div>
           </li>
         ))}
       </ul>
 
-      <div
-        className="modal fade"
-        id="createCategory"
-        tabIndex="-1"
-        role="dialog"
-        aria-labelledby="exampleModalLabel"
-        aria-hidden="true"
-      >
-        <div className="modal-dialog modal-dialog-centered" role="document">
-          <form
-            action={`/api/categories/store`}
-            method="POST"
-            encType="multipart/form-data"
-          >
-            <div className="modal-content">
-              <div className="modal-header">
-                <h5 className="modal-title text-center" id="exampleModalLabel">
-                  Create category
-                </h5>
-                <button
-                  type="button"
-                  className="close"
-                  data-dismiss="modal"
-                  aria-label="Close"
-                >
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div className="modal-body">
-                <div className="jumbotron">
-                  <label>Category title</label>
-                  <input
-                    className="form-control"
-                    type="text"
-                    name="title"
-                    placeholder="Title"
-                  />
-                </div>
-              </div>
-              <div className="modal-footer">
-                <button
-                  type="button"
-                  className="btn btn-secondary"
-                  data-dismiss="modal"
-                >
-                  Cancel
-                </button>
-                <button className="btn btn-success" type="submit">
-                  <i className="fas fa-save"></i> Save
-                </button>
-              </div>
-            </div>
-          </form>
-        </div>
-      </div>
+      {isAddEditOpen && (
+        <AddEditCategoryModal
+          data={modalData}
+          setIsAddEditOpen={setIsAddEditOpen}
+          isEdit={isEdit}
+          setIsEdit={setIsEdit}
+        />
+      )}
+
+      {isDeleteOpen && (
+        <DeleteModal
+          id={modalData.id}
+          title={modalData.title}
+          isDeleteOpen={isDeleteOpen}
+          setIsDeleteOpen={setIsDeleteOpen}
+          isCategory={isCategory}
+          setIsCategory={setIsCategory}
+        />
+      )}
     </div>
   );
 };

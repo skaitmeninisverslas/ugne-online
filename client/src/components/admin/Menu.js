@@ -1,121 +1,189 @@
-import React from "react";
+import React, { useState } from "react";
+import { Formik, Form, Field } from "formik";
+
+import {
+  createUrlForLocalImage,
+  getFileFromInput,
+  trimmedLocalImageUrl,
+} from "../helpers/constants";
+import { editMenu } from "../helpers/apiCalls";
+import { useData } from "../../DataContext";
+import * as messages from "../messages/forms";
 
 export const Menu = ({ menu }) => {
+  const [selectedImage, setSelectedImage] = useState();
+  const [response, setResponse] = useState();
+
+  const { setUpdateData } = useData();
+
+  const initialValues = {
+    ...menu[0],
+    facebook: menu[0].socials.facebook,
+    instagram: menu[0].socials.instagram,
+  };
+
+  const handleSubmitForm = (values) => {
+    // Create form data
+    let form = new FormData();
+    // Add data to formData
+    Object.entries(values).forEach(([key, value]) => form.append(key, value));
+
+    editMenu(menu[0]._id, form)
+      .then((res) => {
+        setUpdateData(true);
+        setSelectedImage("");
+        setResponse(res.data);
+      })
+      .catch((error) => {
+        setResponse(error.response.data);
+        setSelectedImage("");
+      });
+  };
+
   return (
-    <div className="w-100">
-      <h2 className="text-center">Menu information</h2>
+    <Formik initialValues={initialValues} onSubmit={handleSubmitForm}>
+      {({ submitForm, setFieldValue }) => (
+        <div className="w-100">
+          <h2 className="text-center">Menu information</h2>
 
-      <form
-        className="mt-4"
-        action={`/api/menu/edit/${menu[0]._id}`}
-        key={menu[0]._id}
-        method="POST"
-        encType="multipart/form-data"
-      >
-        <div className="modal-header">
-          <img
-            className="rounded-circle"
-            width="75"
-            height="75"
-            src={menu[0].image}
-            alt=""
-          />
-          <h5 className="modal-title text-center" id="exampleModalLabel">
-            Edit menu information
-          </h5>
-        </div>
-        <div className="modal-body">
-          <div className="form-group">
-            <label>Title</label>
-            <input
-              className="form-control"
-              type="text"
-              name="title"
-              defaultValue={menu[0].title}
-              placeholder="Title"
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Email</label>
-            <input
-              className="form-control"
-              type="email"
-              name="email"
-              defaultValue={menu[0].email}
-              placeholder="Email"
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Sidebar description</label>
-            <input
-              className="form-control"
-              type="sidebar"
-              name="sidebar"
-              defaultValue={menu[0].sidebar}
-              placeholder="Email"
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Facebook</label>
-            <input
-              className="form-control"
-              type="url"
-              name="facebook"
-              defaultValue={menu[0].socials.facebook}
-              placeholder="Facebook URL"
-            />
-          </div>
-
-          <div className="form-group">
-            <label>Instagram</label>
-            <input
-              className="form-control"
-              type="url"
-              name="instagram"
-              defaultValue={menu[0].socials.instagram}
-              placeholder="Instagram URL"
-            />
-          </div>
-
-          <div className="form-group">
-            <label>About</label>
-            <textarea
-              className="form-control"
-              name="about"
-              defaultValue={menu[0].about}
-              placeholder="Content ..."
-              cols="30"
-              rows="10"
-            ></textarea>
-          </div>
-
-          <div className="input-group">
-            <div className="input-group-prepend">
-              <span className="input-group-text">Upload</span>
-            </div>
-
-            <div className="form-group custom-file">
-              <input
-                className="custom-file-input"
-                type="file"
-                id="customFile"
-                name="image"
+          <div className="mt-4">
+            <div className="modal-header">
+              <img
+                className="rounded-circle"
+                width="75"
+                height="75"
+                src={menu[0].image}
+                alt=""
               />
-              <label className="custom-file-label" htmlFor="customFile">
-                Choose image
-              </label>
+              <h5 className="modal-title text-center">Edit menu information</h5>
+            </div>
+            <div className="modal-body">
+              <Form>
+                <div className="form-group">
+                  <label>Title</label>
+                  <Field
+                    className="form-control"
+                    type="text"
+                    name="title"
+                    placeholder="Title"
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Email</label>
+                  <Field
+                    className="form-control"
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Sidebar description</label>
+                  <Field
+                    className="form-control"
+                    type="text"
+                    name="sidebar"
+                    placeholder="Sidebar description"
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Facebook</label>
+
+                  <Field
+                    className="form-control"
+                    type="url"
+                    name="facebook"
+                    placeholder="Facebook URL"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Instagram</label>
+                  <Field
+                    className="form-control"
+                    type="url"
+                    name="instagram"
+                    placeholder="Instagram URL"
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>About</label>
+                  <Field
+                    as="textarea"
+                    className="form-control"
+                    name="about"
+                    placeholder="Content ..."
+                    required
+                    cols="30"
+                    rows="10"
+                  />
+                </div>
+
+                {selectedImage && (
+                  <img
+                    className="rounded-circle d-block mx-auto my-3"
+                    width="75"
+                    height="75"
+                    src={createUrlForLocalImage(selectedImage)}
+                    alt=""
+                  />
+                )}
+
+                <div className={`input-group ${!selectedImage && "mt-3"}`}>
+                  <div className="input-group-prepend">
+                    <button
+                      className="input-group-text"
+                      onClick={() => selectedImage && setSelectedImage(null)}
+                    >
+                      {selectedImage ? "Remove" : "Upload"}
+                    </button>
+                  </div>
+
+                  <div className="form-group custom-file">
+                    <input
+                      className="custom-file-input"
+                      required
+                      type="file"
+                      name="image"
+                      onChange={(event) => {
+                        setFieldValue("image", getFileFromInput(event));
+                        setSelectedImage(getFileFromInput(event));
+                      }}
+                    />
+                    <label
+                      className="custom-file-label overflow-hidden"
+                      htmlFor="customFile"
+                    >
+                      {selectedImage
+                        ? trimmedLocalImageUrl(selectedImage)
+                        : "Choose image"}
+                    </label>
+                  </div>
+                </div>
+              </Form>
+            </div>
+
+            {response && (
+              <div id="message" className="FOOTER__information-text mt-0">
+                {messages.forms[response]}
+              </div>
+            )}
+
+            <div className="modal-footer">
+              <button className="btn btn-success" onClick={submitForm}>
+                <i className="fas fa-save"></i> Save
+              </button>
             </div>
           </div>
         </div>
-        <div className="modal-footer">
-          <button className="btn btn-success" type="submit">
-            <i className="fas fa-save"></i> Post
-          </button>
-        </div>
-      </form>
-    </div>
+      )}
+    </Formik>
   );
 };

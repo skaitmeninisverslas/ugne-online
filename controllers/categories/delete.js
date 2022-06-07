@@ -5,11 +5,11 @@ module.exports = (req, res) => {
   const authenticated = req.isAuthenticated();
 
   if (authenticated) {
-    Categories.findByIdAndDelete(req.params.id, (err, doc) => {
-      if (!err) {
-        res.redirect("/admin");
+    Categories.findByIdAndDelete(req.params.id, (error, post) => {
+      if (!error) {
+        res.status(200).send("Category deleted");
       } else {
-        res.redirect("/login");
+        res.status(400).send("An error ocurred", error);
       }
     });
   } else {

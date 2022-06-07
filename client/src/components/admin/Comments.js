@@ -1,6 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
+import { DeleteModal } from "./components/modals/DeleteModal";
 
 export const Comments = ({ comments, posts }) => {
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [isComment, setIsComment] = useState(false);
+  const [modalData, setModalData] = useState();
+
   return (
     <div className="w-100">
       <h2 className="text-center">All Comments</h2>
@@ -25,69 +30,31 @@ export const Comments = ({ comments, posts }) => {
               </div>
               <div className="d-flex flex-column ml-auto border-left pl-4">
                 <button
-                  data-toggle="modal"
-                  data-target={`#delete${com._id}`}
                   className="btn btn-danger mt-2"
+                  onClick={() => {
+                    setModalData({ id: com._id, title: com.comment });
+                    setIsDeleteOpen(true);
+                    setIsComment(true);
+                  }}
                 >
                   <i className="fas fa-trash"></i>
                 </button>
               </div>
             </div>
-
-            <div
-              className="modal fade"
-              id={`delete${com._id}`}
-              tabIndex="-1"
-              role="dialog"
-              aria-labelledby="exampleModalLabel"
-              aria-hidden="true"
-            >
-              <div
-                className="modal-dialog modal-dialog-centered"
-                role="document"
-              >
-                <div className="modal-content">
-                  <div className="modal-header">
-                    <h5
-                      className="modal-title text-center"
-                      id="exampleModalLabel"
-                    >
-                      Warning!
-                    </h5>
-                    <button
-                      type="button"
-                      className="close"
-                      data-dismiss="modal"
-                      aria-label="Close"
-                    >
-                      <span aria-hidden="true">&times;</span>
-                    </button>
-                  </div>
-                  <div className="modal-body">
-                    Are you sure, do you want to delete comment?
-                  </div>
-                  <div className="modal-footer">
-                    <button
-                      type="button"
-                      className="btn btn-secondary"
-                      data-dismiss="modal"
-                    >
-                      Cancel
-                    </button>
-                    <a
-                      type="button"
-                      href={`/api/comments/delete/com._id`}
-                      className="btn btn-danger"
-                    >
-                      Delete
-                    </a>
-                  </div>
-                </div>
-              </div>
-            </div>
           </li>
         ))}
       </ul>
+
+      {isDeleteOpen && (
+        <DeleteModal
+          id={modalData.id}
+          title={modalData.title}
+          isDeleteOpen={isDeleteOpen}
+          setIsDeleteOpen={setIsDeleteOpen}
+          isComment={isComment}
+          setIsComment={setIsComment}
+        />
+      )}
     </div>
   );
 };

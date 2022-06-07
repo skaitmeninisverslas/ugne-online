@@ -1,3 +1,21 @@
+const multer = require("multer");
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./client/public/uploads");
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+    cb(null, file.fieldname + "-" + uniqueSuffix + ".jpg");
+  },
+});
+
+const upload = multer({
+  fileFilter(req, file, cb) {
+    cb(undefined, true);
+  },
+  storage: storage,
+});
+
 // USER
 const userEditController = require("../controllers/user/edit");
 const loginUserController = require("../controllers/user/login");
@@ -31,39 +49,63 @@ const storeCategory = require("../middleware/storeCategory");
 const auth = require("../middleware/auth");
 
 module.exports = (app) => {
-  app.use("/api/posts/store", storePost);
+  app.use(
+    "/api/posts/store",
+    upload.fields([{ name: "image" }, { name: "ogimage" }]),
+    storePost
+  );
   app.use("/api/categories/store", storeCategory);
 
   // Posts routes
   app.post("/api/posts/store", auth, storePostController);
-  app.post("/api/post/edit/:id", auth, postEditController);
+  app.post(
+    "/api/post/edit/:id",
+    auth,
+    upload.fields([{ name: "image" }, { name: "ogimage" }]),
+    postEditController
+  );
   app.get("/api/post/delete/:id", auth, deletePostController);
   // Page routes
-  app.post("/api/page/store", auth, storePageController);
-  app.post("/api/page/edit/:id", auth, pageEditController);
+  app.post(
+    "/api/page/store",
+    auth,
+    upload.fields([{ name: "image" }, { name: "ogimage" }]),
+    storePageController
+  );
+  app.post(
+    "/api/page/edit/:id",
+    upload.fields([{ name: "image" }, { name: "ogimage" }]),
+    auth,
+    pageEditController
+  );
   app.get("/api/page/delete/:id", auth, deletePageController);
   // Categories routes
-  app.post("/api/categories/store", auth, storeCategoryController);
+  app.post("/api/category/store", auth, storeCategoryController);
   app.post("/api/category/change/:id", auth, storeEditCategoryController);
   app.get("/api/category/delete/:id", auth, deleteCategoryController);
   // User routes
-  app.post("/api/users/login", loginUserController, auth);
-  app.post("/api/user/edit", auth, userEditController);
+  app.post("/api/users/login", upload.none(), loginUserController, auth);
+  app.post("/api/user/edit", auth, upload.single("image"), userEditController);
   app.get("/api/auth/logout", logoutController);
   // Menu routes
-  app.post("/api/menu/edit/:id", auth, editMenuController);
+  app.post(
+    "/api/menu/edit/:id",
+    auth,
+    upload.single("image"),
+    editMenuController
+  );
   // Comments
   app.get("/api/comments/delete/:id", auth, deleteComment);
   app.post("/api/comments/store", storeComment);
   // Subscriber
-  app.post("/api/subscribers/store", subscriberController);
+  app.post("/api/subscriber/store", subscriberController);
   app.get("/api/subscribers/delete/:id", deleteSubscriberController);
   // All data
   app.get("/api/data", dataController);
 };
 
 // UNUSED, BUT MIGHT BE REQUIRED STUFF
-// app.post("/api/users/register", redirectIfAuthenticated, storeUserController);
+// app.post("/api/users/register", redirectIfAuthenticated, upload.single("image"), storeUserController);
 // app.get("/api/user/delete/:id", auth, deleteUserController);
 // const redirectIfAuthenticated = require("../middleware/redirectIfAuthenticated");
 // const deleteUserController = require("../controllers/user/delete");

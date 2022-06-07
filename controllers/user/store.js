@@ -1,29 +1,30 @@
-const User = require('../../database/models/User');
-const path = require('path');
+const User = require("../../database/models/User");
+const path = require("path");
 
 module.exports = (req, res) => {
-  const { image } = req.files;
+  const host = req.hostname;
 
-  image.mv(path.resolve(__dirname, '..', '..', 'client/public/images', image.name), async (error) => {
-  User.create({
-    username: req.body.username,
-    email: req.body.email,
-    password: req.body.password,
-    about: req.body.about,
-    socials: {
-      facebook: req.body.facebook,
-      instagram: req.body.instagram
-    },
-    image: `/images/${image.name}`
-  }, (error, user) => {
-      if (error) {
-        console.log(error)
-        const registrationErrors = Object.keys(error.errors).map(key => error.errors[key].message)
+  let image = {};
 
-        req.flash('registrationErrors', registrationErrors)
-        return res.redirect('/auth/register')
-      }
-      res.redirect('/')
-    })
+  if (req.file) {
+    image = {
+      image: `${req.protocol}://${host}:3000/uploads/${req.file.path
+        .split("\\")
+        .slice(3)}`,
+      image_type: req.file.mimetype,
+    };
+  }
+
+  const userCreate = {
+    ...req.body,
+    ...image,
+  };
+
+  User.create(userCreate, (error, post) => {
+    if (!error) {
+      res.status(200).send("User created");
+    } else {
+      res.status(400).send("An error ocurred", error);
+    }
   });
-}
+};

@@ -7,6 +7,7 @@ import { Footer } from "./Footer";
 import { itemNameFromLink } from "./helpers/constants";
 import { useData } from "../DataContext";
 import { getInstagramFeed } from "./helpers/apiCalls";
+import { SubscriptionForm } from "./components/SubscriptionForm";
 
 export const Post = () => {
   const location = useLocation();
@@ -24,6 +25,7 @@ export const Post = () => {
   const currentPost =
     !isLoading &&
     post.find((item) => item.title === itemNameFromLink(location));
+
   const relatedPosts =
     !isLoading &&
     post
@@ -32,10 +34,13 @@ export const Post = () => {
           item.category === currentPost.category && item._id !== currentPost._id
       )
       .slice(0, 3);
+
   const postComments =
     !isLoading && comments.filter((item) => item.post === currentPost._id);
+
   const currentPostCategory =
     !isLoading && categories.find((item) => item._id === currentPost.category);
+
   const firstPostInArray = !isLoading && first(post);
 
   return (
@@ -144,17 +149,8 @@ export const Post = () => {
                       User are already exist!
                     </p>
                   </div>
-                  <form method="POST" action={`/api/subscribers/store`}>
-                    <input
-                      className="FOOTER__subscribe-input"
-                      type="email"
-                      placeholder="Email Address"
-                      name="subscribe"
-                    />
-                    <button type="submit" className="FOOTER__subscribe-button">
-                      Sign Up
-                    </button>
-                  </form>
+
+                  <SubscriptionForm />
                 </div>
                 <div className="POST__sidebar-recent">Most Recent Post</div>
 

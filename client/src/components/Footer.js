@@ -1,6 +1,7 @@
 import React from "react";
 
 import { useData } from "../DataContext";
+import { SubscriptionForm } from "./components/SubscriptionForm";
 
 export const Footer = () => {
   const {
@@ -14,15 +15,7 @@ export const Footer = () => {
         <p className="FOOTER__information-text">Get updates on my lifestyle!</p>
       </div>
       <div className="FOOTER__subscribe">
-        <form method="POST" action={`/api/subscribers/store`}>
-          <input
-            className="FOOTER__subscribe-input"
-            type="email"
-            placeholder="Email Address"
-            name="subscribe"
-          />
-          <button className="FOOTER__subscribe-button">Sign Up</button>
-        </form>
+        <SubscriptionForm />
       </div>
       <div className="MENU__information-social FOOTER__social">
         <a

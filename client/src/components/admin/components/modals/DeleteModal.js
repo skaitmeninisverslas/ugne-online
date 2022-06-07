@@ -1,9 +1,15 @@
 import React from "react";
 
-import { useData } from "../../../DataContext";
-import { deletePage, deletePost } from "../../helpers/apiCalls";
+import { useData } from "../../../../DataContext";
+import {
+  deleteCategory,
+  deleteComment,
+  deletePage,
+  deletePost,
+  deleteSubscriber,
+} from "../../../helpers/apiCalls";
 
-export const DeletePostModal = ({
+export const DeleteModal = ({
   id,
   title,
   setIsDeleteOpen,
@@ -11,20 +17,41 @@ export const DeletePostModal = ({
   setIsPage,
   isPosts,
   setIsPosts,
+  isCategory,
+  setIsCategory,
+  isComment,
+  setIsComment,
+  isSubscriber,
+  setIsSubscriber,
 }) => {
   const { setUpdateData } = useData();
 
+  const onModalClose = () => {
+    setIsDeleteOpen(false);
+    setUpdateData(true);
+    isPage
+      ? setIsPage(false)
+      : isPosts
+      ? setIsPosts(false)
+      : isCategory
+      ? setIsCategory(false)
+      : isComment
+      ? setIsComment(false)
+      : setIsSubscriber(false);
+  };
+
   const handleSubmitForm = () => {
     isPage
-      ? deletePage(id).then(() => {
-          setIsDeleteOpen(false);
-          setUpdateData(true);
-          setIsPage(false);
-        })
-      : deletePost(id).then(() => {
-          setIsDeleteOpen(false);
-          setUpdateData(true);
-        });
+      ? deletePage(id).then(() => onModalClose())
+      : isPosts
+      ? deletePost(id).then(() => onModalClose())
+      : isCategory
+      ? deleteCategory(id).then(() => onModalClose())
+      : isComment
+      ? deleteComment(id).then(() => onModalClose())
+      : isSubscriber
+      ? deleteSubscriber(id).then(() => onModalClose())
+      : onModalClose();
   };
 
   return (
@@ -69,7 +96,16 @@ export const DeletePostModal = ({
               </button>
             </div>
             <div className="modal-body">
-              Are you sure, do you want to delete {isPage ? "page" : "post"}:
+              Are you sure, do you want to delete{" "}
+              {isPage
+                ? "page: "
+                : isPosts
+                ? "post: "
+                : isCategory
+                ? "category: "
+                : isComment
+                ? "comment: "
+                : "subscriber: "}
               {title}
             </div>
             <div className="modal-footer text-center d-flex justify-content-center">

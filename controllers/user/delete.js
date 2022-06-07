@@ -1,11 +1,11 @@
 const User = require("../../database/models/User");
 
 module.exports = (req, res) => {
-  User.findByIdAndDelete(req.user.Id, (err, doc) => {
-    if (!err) {
-      res.redirect("/");
+  User.findByIdAndDelete(req.user.Id, (error, post) => {
+    if (!error) {
+      res.status(200).send("User deleted");
     } else {
-      console.log(err);
+      res.status(400).send("An error ocurred", error);
     }
   });
 };

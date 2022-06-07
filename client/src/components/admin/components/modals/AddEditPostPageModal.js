@@ -6,16 +6,16 @@ import {
   createPost,
   editPage,
   editPost,
-} from "../../helpers/apiCalls";
-import { useData } from "../../../DataContext";
+} from "../../../helpers/apiCalls";
+import { useData } from "../../../../DataContext";
 import {
   trimmedLocalImageUrl,
   createUrlForLocalImage,
   getFileFromInput,
-} from "../../helpers/constants";
-import { SeoInputs } from "./SeoInputs";
+} from "../../../helpers/constants";
+import { SeoInputs } from "./components/SeoInputs";
 
-export const AddEditPostModal = ({
+export const AddEditPostPageModal = ({
   categories,
   data,
   isEdit,
@@ -280,6 +280,7 @@ export const AddEditPostModal = ({
                   >
                     Cancel
                   </button>
+
                   <button
                     className="btn btn-success"
                     type="submit"

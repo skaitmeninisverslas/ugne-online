@@ -1,11 +1,10 @@
 import React from "react";
 import { Field } from "formik";
-
 import {
   createUrlForLocalImage,
   getFileFromInput,
   trimmedLocalImageUrl,
-} from "../../helpers/constants";
+} from "../../../../helpers/constants";
 
 export const SeoInputs = ({
   image,
