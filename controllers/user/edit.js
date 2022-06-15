@@ -1,4 +1,4 @@
-const path = require("path");
+const sharp = require("sharp");
 
 const User = require("../../database/models/User");
 
@@ -6,22 +6,25 @@ module.exports = async (req, res) => {
   const authenticated = req.isAuthenticated();
 
   if (authenticated) {
-    const host = req.hostname;
-
     let image = {};
 
     if (req.file) {
+      await sharp(req.file.buffer)
+        .webp({ quality: 50 })
+        .toBuffer()
+        .then((newBuffer) => {
+          return (req.file.buffer = newBuffer);
+        });
+
       image = {
-        image: `${req.protocol}://${host}:3000/uploads/${req.file.path
-          .split("\\")
-          .slice(3)}`,
-        image_type: req.file.mimetype,
+        file: req.file.buffer,
+        mimetype: req.file.mimetype,
       };
     }
 
     const userEdit = {
       ...req.body,
-      ...image,
+      image,
     };
 
     User.findByIdAndUpdate(req.user.id, userEdit, (error, post) => {

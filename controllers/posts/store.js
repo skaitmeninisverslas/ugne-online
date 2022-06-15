@@ -1,7 +1,6 @@
-const path = require("path");
-
 const Post = require("../../database/models/Post");
 const User = require("../../database/models/User");
+const sharp = require("sharp");
 
 module.exports = async (req, res) => {
   const authenticated = req.isAuthenticated();
@@ -9,47 +8,51 @@ module.exports = async (req, res) => {
   if (authenticated) {
     const user = await User.findById(req.user.id);
 
-    const host = req.hostname;
-
     let image = {};
     let ogimage = {};
 
     if (req.files["image"]) {
+      await sharp(req.files["image"][0].buffer)
+        .webp({ quality: 50 })
+        .toBuffer()
+        .then((newBuffer) => {
+          return (req.files["image"][0].buffer = newBuffer);
+        });
+
       image = {
-        image: `${req.protocol}://${host}:3000/uploads/${req.files[
-          "image"
-        ][0].path
-          .split("\\")
-          .slice(3)}`,
-        image_type: req.files["image"][0].mimetype,
+        file: req.files["image"][0].buffer,
+        mimetype: req.files["image"][0].mimetype,
       };
     }
 
     if (req.files["ogimage"]) {
+      await sharp(req.files["ogimage"][0].buffer)
+        .webp({ quality: 50 })
+        .toBuffer()
+        .then((newBuffer) => {
+          return (req.files["ogimage"][0].buffer = newBuffer);
+        });
+
       ogimage = {
-        ogimage: `${req.protocol}://${host}:3000/uploads/${req.files[
-          "ogimage"
-        ][0].path
-          .split("\\")
-          .slice(3)}`,
-        ogimage_type: req.files["ogimage"][0].mimetype,
+        file: req.files["ogimage"][0].buffer,
+        mimetype: req.files["ogimage"][0].mimetype,
       };
     }
 
-    Post.create(
-      {
-        ...req.body,
-        ...image,
-        ...ogimage,
-      },
-      (error, post) => {
-        if (!error) {
-          res.status(200).send("Deleted");
-        } else {
-          res.status(400).send("An error ocurred", error);
-        }
+    const postEdit = {
+      author: user.username,
+      ...req.body,
+      image,
+      ogimage,
+    };
+
+    Post.create(postEdit, (error, post) => {
+      if (!error) {
+        res.status(200).send("Deleted");
+      } else {
+        res.status(400).send(error);
       }
-    );
+    });
   } else {
     res.redirect("/login");
   }

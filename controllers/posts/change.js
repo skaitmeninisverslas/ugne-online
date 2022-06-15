@@ -1,4 +1,4 @@
-const path = require("path");
+const sharp = require("sharp");
 
 const Post = require("../../database/models/Post");
 const User = require("../../database/models/User");
@@ -9,37 +9,42 @@ module.exports = async (req, res) => {
   if (authenticated) {
     const user = await User.findById(req.user.id);
 
-    const host = req.hostname;
-
     let image = {};
     let ogimage = {};
 
     if (req.files["image"]) {
+      await sharp(req.files["image"][0].buffer)
+        .webp({ quality: 50 })
+        .toBuffer()
+        .then((newBuffer) => {
+          return (req.files["image"][0].buffer = newBuffer);
+        });
+
       image = {
-        image: `${req.protocol}://${host}:3000/uploads/${req.files[
-          "image"
-        ][0].path
-          .split("\\")
-          .slice(3)}`,
-        image_type: req.files["image"][0].mimetype,
+        file: req.files["image"][0].buffer,
+        mimetype: req.files["image"][0].mimetype,
       };
     }
 
     if (req.files["ogimage"]) {
+      await sharp(req.files["ogimage"][0].buffer)
+        .webp({ quality: 50 })
+        .toBuffer()
+        .then((newBuffer) => {
+          return (req.files["ogimage"][0].buffer = newBuffer);
+        });
+
       ogimage = {
-        ogimage: `${req.protocol}://${host}:3000/uploads/${req.files[
-          "ogimage"
-        ][0].path
-          .split("\\")
-          .slice(3)}`,
-        ogimage_type: req.files["ogimage"][0].mimetype,
+        file: req.files["ogimage"][0].buffer,
+        mimetype: req.files["ogimage"][0].mimetype,
       };
     }
 
     const postEdit = {
+      author: user.username,
       ...req.body,
-      ...image,
-      ...ogimage,
+      image,
+      ogimage,
     };
 
     Post.findByIdAndUpdate(req.params.id, postEdit, (error, post) => {

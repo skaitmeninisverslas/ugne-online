@@ -2,47 +2,43 @@ import React, { Fragment, useState } from "react";
 import { Formik, Form, Field } from "formik";
 
 import {
-  createPage,
-  createPost,
-  editPage,
-  editPost,
-} from "../../../helpers/apiCalls";
-import { useData } from "../../../../DataContext";
-import {
   trimmedLocalImageUrl,
   createUrlForLocalImage,
   getFileFromInput,
+  bufferImageToString,
 } from "../../../helpers/constants";
 import { SeoInputs } from "./components/SeoInputs";
 
 export const AddEditPostPageModal = ({
   categories,
   data,
-  isEdit,
-  setIsEdit,
   setIsAddEditOpen,
-  isPosts,
-  setIsPosts,
-  isPage,
-  setIsPage,
+  isEdit,
+  dispatch,
+  action,
+  call,
+  setUpdateData,
 }) => {
+  const { content, component } = data;
+
   const isSeoData = Boolean(
-    data &&
-      (data.metitle ||
-        data.medescription ||
-        data.ogimage ||
-        data.ogtitle ||
-        data.ogdescription)
+    content &&
+      (content.metitle ||
+        content.medescription ||
+        content.ogimage ||
+        content.ogtitle ||
+        content.ogdescription)
   );
+
+  const [isSeoNeeded, setIsSeoNeeded] = useState(isSeoData);
   const [selectedImage, setSelectedImage] = useState();
   const [selectedOgImage, setSelectedOgImage] = useState();
-  const [isSeoNeeded, setIsSeoNeeded] = useState(isSeoData || false);
-  const { setUpdateData } = useData();
+
+  const isPage = component === "page";
+  const isPosts = component === "post";
 
   const onModalClose = () => {
-    setIsEdit(false);
     setIsAddEditOpen(false);
-    isPage ? setIsPage(false) : setIsPosts(false);
   };
 
   const handleSubmitForm = (values) => {
@@ -51,32 +47,40 @@ export const AddEditPostPageModal = ({
     // Add data to formData
     Object.entries(values).forEach(([key, value]) => form.append(key, value));
 
-    isEdit && isPosts
-      ? editPost(data._id, form).then(() => {
-          setUpdateData(true);
-          onModalClose();
-        })
-      : isEdit && isPage
-      ? editPage(data._id, form).then(() => {
-          setUpdateData(true);
-          onModalClose();
-        })
-      : isPosts
-      ? createPost(form).then(() => {
-          setUpdateData(true);
-          onModalClose();
-        })
-      : createPage(form).then(() => {
-          setUpdateData(true);
-          onModalClose();
-        });
+    dispatch({
+      type: action,
+      call: call,
+      id: values._id,
+      payload: form,
+    });
+    setUpdateData(true);
+    onModalClose();
+  };
+
+  const generalInitialValues = {
+    title: "",
+    content: "",
+    image: "",
+  };
+
+  const seoInitialValues = {
+    ogimage: "",
+    metitle: "",
+    medescription: "",
+    ogtitle: "",
+    ogdescription: "",
   };
 
   const initialValues = isEdit
-    ? data
+    ? content
     : isPosts && categories
-    ? { category: categories[0]._id }
-    : {};
+    ? {
+        ...generalInitialValues,
+        category: categories[0]._id,
+        description: "",
+        ...seoInitialValues,
+      }
+    : isPage && { ...generalInitialValues, ...seoInitialValues, subtitle: "" };
 
   return (
     <Formik initialValues={initialValues} onSubmit={handleSubmitForm}>
@@ -110,7 +114,7 @@ export const AddEditPostPageModal = ({
                 <div className="modal-header">
                   <h5 className="modal-title text-center">
                     {isEdit
-                      ? `Edit ${data.title}`
+                      ? `Edit ${content.title}`
                       : isPosts
                       ? "Create New Post"
                       : "Create New Page"}
@@ -192,9 +196,12 @@ export const AddEditPostPageModal = ({
                         rows="10"
                       />
 
-                      {isEdit && data.image && (
+                      {isEdit && content.image && (
                         <img
-                          src={data.image}
+                          src={bufferImageToString(
+                            content.image.mimetype,
+                            content.image.file.data
+                          )}
                           className="rounded d-block mx-auto mt-3"
                           width="200"
                           alt=""
@@ -264,7 +271,7 @@ export const AddEditPostPageModal = ({
                     {isSeoNeeded && (
                       <SeoInputs
                         selectedOgImage={selectedOgImage}
-                        image={data.ogimage}
+                        image={content.ogimage}
                         isEdit={isEdit}
                         setSelectedOgImage={setSelectedOgImage}
                         setFieldValue={setFieldValue}

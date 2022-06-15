@@ -7,22 +7,53 @@ import { Login } from "./components/Login";
 import { Post } from "./components/Post";
 import { Page } from "./components/Page";
 import { Category } from "./components/Category";
-import { DataProvider } from "./DataContext";
+
+import { CoreReducerProvider } from "./reducers/core";
+import { PageProvider } from "./PageContext";
 
 import "./scss/app.scss";
 
 const App = () => {
   return (
-    <DataProvider>
+    <CoreReducerProvider>
       <BrowserRouter>
-        <Route exact path="/" component={Homepage} />
+        <Route
+          exact
+          path="/"
+          render={() => (
+            <PageProvider>
+              <Homepage />
+            </PageProvider>
+          )}
+        />
+        <Route
+          path="/categories/:category"
+          render={() => (
+            <PageProvider>
+              <Category />
+            </PageProvider>
+          )}
+        />
+        <Route
+          path="/post/:title"
+          render={() => (
+            <PageProvider>
+              <Post />
+            </PageProvider>
+          )}
+        />
+        <Route
+          path="/page/:title"
+          render={() => (
+            <PageProvider>
+              <Page />
+            </PageProvider>
+          )}
+        />
         <Route exact path="/admin" component={Admin} />
         <Route exact path="/login" component={Login} />
-        <Route path="/categories/:category" component={Category} />
-        <Route path="/post/:title" component={Post} />
-        <Route path="/page/:title" component={Page} />
       </BrowserRouter>
-    </DataProvider>
+    </CoreReducerProvider>
   );
 };
 

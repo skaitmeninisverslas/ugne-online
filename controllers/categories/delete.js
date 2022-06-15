@@ -1,5 +1,4 @@
 const Categories = require("../../database/models/Categories");
-const Post = require("../../database/models/Post");
 
 module.exports = (req, res) => {
   const authenticated = req.isAuthenticated();

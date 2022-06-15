@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const MenuSchema = new mongoose.Schema({
   title: String,
@@ -8,11 +8,11 @@ const MenuSchema = new mongoose.Schema({
   sidebar: String,
   socials: {
     facebook: String,
-    instagram: String
+    instagram: String,
   },
-  image: String
+  image: { file: Buffer, mimetype: String },
 });
 
-const Menu = mongoose.model('Menu', MenuSchema);
+const Menu = mongoose.model("Menu", MenuSchema);
 
 module.exports = Menu;

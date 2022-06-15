@@ -6,7 +6,7 @@
   }
   @include media-breakpoint-down(sm) {
     margin-top: 105px;
-    padding: 0px $space-xs $space-std $space-xs;
+    padding: 0px $space-xs;
   }
   &__blog {
     display: grid;
@@ -27,19 +27,20 @@
     &-post {
       width: 100%;
       &:hover {
+        animation-fill-mode: forwards !important;
         -webkit-animation-fill-mode: forwards !important;
         animation: fadeOut;
-        animation-duration: .5s;
+        animation-duration: 0.5s;
       }
       &-image {
-         text-decoration: none !important;
-         display: block;
-         background-repeat: no-repeat;
-         background-size: cover;
-         background-position: center;
-         width: 100%;
-         height: 0;
-         padding-bottom: 150%;
+        text-decoration: none !important;
+        display: block;
+        background-repeat: no-repeat;
+        background-size: cover;
+        background-position: center;
+        width: 100%;
+        height: 0;
+        padding-bottom: 150%;
       }
       &-title {
         padding-top: $space-xs;
@@ -47,7 +48,7 @@
         text-align: center;
         font-size: $font-xl;
         &::after {
-          content: '';
+          content: "";
           height: 1px;
           margin: 0 auto;
           background-color: $bar;

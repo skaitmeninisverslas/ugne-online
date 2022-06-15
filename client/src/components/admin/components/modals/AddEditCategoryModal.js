@@ -1,35 +1,31 @@
 import React from "react";
 import { Formik, Form, Field } from "formik";
 
-import { useData } from "../../../../DataContext";
-import { createCategory, editCategory } from "../../../helpers/apiCalls";
-
 export const AddEditCategoryModal = ({
   data,
   setIsAddEditOpen,
   isEdit,
-  setIsEdit,
+  dispatch,
+  setUpdateData,
+  action,
+  call,
 }) => {
-  const { setUpdateData } = useData();
-
   const onModalClose = () => {
-    setIsEdit(false);
     setIsAddEditOpen(false);
   };
 
   const handleSubmitForm = (values) => {
-    isEdit
-      ? editCategory(values._id, values).then(() => {
-          setUpdateData(true);
-          onModalClose();
-        })
-      : createCategory(values).then(() => {
-          setUpdateData(true);
-          onModalClose();
-        });
+    dispatch({
+      type: action,
+      call: call,
+      id: values._id,
+      payload: values,
+    });
+    setUpdateData(true);
+    onModalClose();
   };
 
-  const initialValues = isEdit ? data : {};
+  const initialValues = isEdit ? data : { title: "" };
 
   return (
     <Formik initialValues={initialValues} onSubmit={handleSubmitForm}>
@@ -51,12 +47,15 @@ export const AddEditCategoryModal = ({
             <div className="modal-content">
               <div className="modal-header">
                 <h5 className="modal-title text-center">
-                  {isEdit ? `Edit category: ${data.title}` : "Create category"}
+                  {isEdit
+                    ? `Edit category: ${data && data.title}`
+                    : "Create category"}
                 </h5>
                 <button type="button" className="close" onClick={onModalClose}>
                   <span>&times;</span>
                 </button>
               </div>
+
               <div className="modal-body">
                 <Form>
                   <div className="form-group">
@@ -71,6 +70,7 @@ export const AddEditCategoryModal = ({
                   </div>
                 </Form>
               </div>
+
               <div className="modal-footer">
                 <button
                   type="button"

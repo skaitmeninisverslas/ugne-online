@@ -1,29 +1,33 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useContext } from "react";
 import { useLocation } from "react-router-dom";
 
-import { Header } from "./Header";
-import { Footer } from "./Footer";
-import { itemNameFromLink } from "./helpers/constants";
-import { useData } from "../DataContext";
+import {
+  bufferImageToString,
+  itemNameFromLink,
+  postDate,
+} from "./helpers/constants";
+import { usePostsData } from "./hooks/usePostsData";
+import { PageContext } from "../PageContext";
 
 export const Category = () => {
-  const { data, isLoading } = useData();
   const location = useLocation();
 
-  const { categories, post } = data;
+  const { posts } = usePostsData();
+  const { categories, menu, pages } = useContext(PageContext);
+
+  const isLoading = !categories || !posts || !menu || !pages;
 
   const currentCategory =
     !isLoading &&
     categories.find((item) => item.title === itemNameFromLink(location));
+
   const categoryPosts =
-    !isLoading && post.filter((item) => item.category === currentCategory._id);
+    !isLoading && posts.filter((item) => item.category === currentCategory._id);
 
   return (
     <Fragment>
       {!isLoading ? (
         <div className="CONTENT">
-          <Header />
-
           <h2 className="CONTENT__category-title">
             All in "{currentCategory.title}"
           </h2>
@@ -37,15 +41,17 @@ export const Category = () => {
                 <a
                   className="CONTENT__blog-post-image"
                   href={`/post/${item.title}`}
-                  style={{ backgroundImage: `url(${item.image})` }}
+                  style={{
+                    backgroundImage: `url(${bufferImageToString(
+                      item.image.mimetype,
+                      item.image.file.data
+                    )})`,
+                  }}
                 >
                   {""}
                 </a>
                 <p className="CONTENT__blog-post-date">
-                  {new Date(item.createdAt).toLocaleString("en-gb", {
-                    month: "short",
-                    day: "numeric",
-                  })}
+                  {postDate(item.createdAt)}
                 </p>
                 <a
                   className="CONTENT__blog-post-link"
@@ -59,8 +65,6 @@ export const Category = () => {
               </li>
             ))}
           </ul>
-
-          <Footer />
         </div>
       ) : (
         <span className="LOADING">Loading...</span>

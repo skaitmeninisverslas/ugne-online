@@ -5,10 +5,10 @@
   top: 0;
   left: 0;
   right: 0;
-  padding: $space-lg 0;
+  padding: $space-lg $space-xxl;
 
   @include media-breakpoint-down(md) {
-    padding: $space-sm 0;
+    padding: $space-sm $space-lg;
   }
 
   @include media-breakpoint-down(sm) {

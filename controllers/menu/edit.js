@@ -1,3 +1,5 @@
+const sharp = require("sharp");
+
 const Menu = require("../../database/models/Menu");
 
 module.exports = async (req, res) => {
@@ -6,16 +8,19 @@ module.exports = async (req, res) => {
   const { title, email, about, sidebar, facebook, instagram } = req.body;
 
   if (authenticated) {
-    const host = req.hostname;
-
     let image = {};
 
     if (req.file) {
+      await sharp(req.file.buffer)
+        .webp({ quality: 50 })
+        .toBuffer()
+        .then((newBuffer) => {
+          return (req.file.buffer = newBuffer);
+        });
+
       image = {
-        image: `${req.protocol}://${host}:3000/uploads/${req.file.path
-          .split("\\")
-          .slice(3)}`,
-        image_type: req.file.mimetype,
+        file: req.file.buffer,
+        mimetype: req.file.mimetype,
       };
     }
 
@@ -28,7 +33,7 @@ module.exports = async (req, res) => {
         facebook,
         instagram,
       },
-      ...image,
+      image,
     };
 
     Menu.findByIdAndUpdate(req.params.id, menuEdit, (error, post) => {

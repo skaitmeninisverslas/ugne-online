@@ -1,18 +1,27 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { Fragment, useContext, useEffect, useState } from "react";
 import { first } from "lodash-es";
 import { useLocation } from "react-router-dom";
 
-import { Header } from "./Header";
-import { Footer } from "./Footer";
-import { itemNameFromLink } from "./helpers/constants";
-import { useData } from "../DataContext";
+import {
+  bufferImageToString,
+  commentDate,
+  itemNameFromLink,
+  postDate,
+} from "./helpers/constants";
 import { getInstagramFeed } from "./helpers/apiCalls";
 import { SubscriptionForm } from "./components/SubscriptionForm";
+import { useAuthentication } from "./hooks/useAuthentication";
+import { usePostsData } from "./hooks/usePostsData";
+import { PageContext } from "../PageContext";
+import { useCommentsData } from "./hooks/useCommentsData";
 
 export const Post = () => {
-  const location = useLocation();
-  const { data, isLoading, authenticated } = useData();
   const [feed, setFeed] = useState();
+  const location = useLocation();
+  const { authenticated } = useAuthentication();
+  const { posts } = usePostsData();
+  const { comments } = useCommentsData();
+  const { categories, menu, pages } = useContext(PageContext);
 
   useEffect(() => {
     getInstagramFeed().then((res) => {
@@ -20,43 +29,69 @@ export const Post = () => {
     });
   }, []);
 
-  const { categories, comments, menu, post } = data;
+  const isLoading = !menu || !categories || !posts || !pages;
 
   const currentPost =
     !isLoading &&
-    post.find((item) => item.title === itemNameFromLink(location));
+    posts.find((item) => item.title === itemNameFromLink(location));
 
   const relatedPosts =
     !isLoading &&
-    post
+    posts
       .filter(
         (item) =>
           item.category === currentPost.category && item._id !== currentPost._id
       )
       .slice(0, 3);
 
-  const postComments =
-    !isLoading && comments.filter((item) => item.post === currentPost._id);
+  const currentPostComments =
+    comments && comments.filter((item) => item.post === currentPost._id);
 
   const currentPostCategory =
     !isLoading && categories.find((item) => item._id === currentPost.category);
 
-  const firstPostInArray = !isLoading && first(post);
+  const firstPostInArray = !isLoading && first(posts);
+
+  const postComments = () => {
+    return (
+      <Fragment>
+        <div className="COMMENTS__display-title">Comments</div>
+
+        {currentPostComments.map((item, key) => (
+          <div className="COMMENTS__display" key={key}>
+            <div className="COMMENTS__display-name">{item.user}</div>
+            <p className="POST__date COMMENTS__display-date">
+              {commentDate(item.createdAt)}
+            </p>
+            <div className="COMMENTS__display-comment">{item.comment}</div>
+            {authenticated && (
+              <a
+                className="COMMENTS__display-delete right"
+                href={`/api/comments/delete/${item._id}`}
+              >
+                <i className="fas fa-trash"></i>
+              </a>
+            )}
+          </div>
+        ))}
+      </Fragment>
+    );
+  };
 
   return (
     <Fragment>
       {!isLoading ? (
         <div className="CONTENT">
-          <Header />
-
           <div className="POST__center">
-            <img className="POST__image" src={currentPost.image} alt="" />
-            <p className="POST__date">
-              {new Date(currentPost.createdAt).toLocaleString("en-gb", {
-                month: "short",
-                day: "numeric",
-              })}
-            </p>
+            <img
+              className="POST__image"
+              src={bufferImageToString(
+                currentPost.image.mimetype,
+                currentPost.image.file.data
+              )}
+              alt=""
+            />
+            <p className="POST__date">{postDate(currentPost.createdAt)}</p>
             <h2 className="POST__title">{currentPost.title}</h2>
             <a
               className="POST__category"
@@ -95,33 +130,7 @@ export const Post = () => {
                   </button>
                 </form>
 
-                <div className="COMMENTS__display-title">Comments</div>
-
-                {postComments.map((item, key) => (
-                  <div className="COMMENTS__display" key={key}>
-                    <div className="COMMENTS__display-name">{item.user}</div>
-                    <p className="POST__date COMMENTS__display-date">
-                      {new Date(item.createdAt).toLocaleString("en-gb", {
-                        month: "short",
-                        day: "numeric",
-                        year: "numeric",
-                        hour: "numeric",
-                        minute: "numeric",
-                      })}
-                    </p>
-                    <div className="COMMENTS__display-comment">
-                      {item.comment}
-                    </div>
-                    {authenticated && (
-                      <a
-                        className="COMMENTS__display-delete right"
-                        href={`/api/comments/delete/${item._id}`}
-                      >
-                        <i className="fas fa-trash"></i>
-                      </a>
-                    )}
-                  </div>
-                ))}
+                {currentPostComments && postComments()}
               </div>
 
               <div className="POST__sidebar">
@@ -129,7 +138,10 @@ export const Post = () => {
                   <img
                     className="POST__sidebar-image rounded-circle"
                     height="200"
-                    src={menu[0].image}
+                    src={bufferImageToString(
+                      menu.image.mimetype,
+                      menu.image.file.data
+                    )}
                     alt=""
                   />
 
@@ -137,7 +149,7 @@ export const Post = () => {
                     {currentPost.author}
                   </div>
 
-                  <div className="POST__sidebar-about">{menu[0].sidebar}</div>
+                  <div className="POST__sidebar-about">{menu.sidebar}</div>
                 </div>
                 <div className="FOOTER__subscribe POST__sidebar-subscribe">
                   <div className="FOOTER__information text-left">
@@ -160,7 +172,10 @@ export const Post = () => {
                 >
                   <img
                     className="POST__sidebar-recent-image"
-                    src={firstPostInArray.image}
+                    src={bufferImageToString(
+                      firstPostInArray.image.mimetype,
+                      firstPostInArray.image.file.data
+                    )}
                     alt=""
                   />
                   <div className="POST__sidebar-recent-title">
@@ -179,7 +194,7 @@ export const Post = () => {
 
                 <a
                   className="POST__sidebar-recent-instagram-link"
-                  href={menu[0].socials.instagram}
+                  href={menu.socials.instagram}
                 >
                   @ugne.online
                 </a>
@@ -203,6 +218,7 @@ export const Post = () => {
               </div>
             </div>
           </div>
+
           <div className="RELATED">
             <div className="CONTENT__blog-post-title RELATED__title text-center">
               Related Posts
@@ -213,7 +229,12 @@ export const Post = () => {
                   <a
                     className="CONTENT__blog-post-image RELATED__posts-post"
                     href={`/post/${item.title}`}
-                    style={{ backgroundImage: `url(${item.image})` }}
+                    style={{
+                      backgroundImage: `url(${bufferImageToString(
+                        item.image.mimetype,
+                        item.image.file.data
+                      )})`,
+                    }}
                   >
                     {""}
                   </a>
@@ -222,10 +243,7 @@ export const Post = () => {
                     href={`/post/${item.title}`}
                   >
                     <p className="CONTENT__blog-post-date">
-                      {new Date(item.createdAt).toLocaleString("en-gb", {
-                        month: "short",
-                        day: "numeric",
-                      })}
+                      {postDate(item.createdAt)}
                     </p>
                     <div className="CONTENT__blog-post-title RELATED__posts-title">
                       {item.title}
@@ -235,8 +253,6 @@ export const Post = () => {
               ))}
             </ul>
           </div>
-
-          <Footer />
         </div>
       ) : (
         <span className="LOADING">Loading...</span>

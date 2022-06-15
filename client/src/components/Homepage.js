@@ -1,22 +1,21 @@
-import React, { Fragment } from "react";
+import React, { Fragment, useContext } from "react";
 
-import { Header } from "./Header";
-import { Footer } from "./Footer";
-import { useData } from "../DataContext";
+import { bufferImageToString, postDate } from "./helpers/constants";
+import { usePostsData } from "./hooks/usePostsData";
+import { PageContext } from "../PageContext";
 
 export const Homepage = () => {
-  const { data, isLoading } = useData();
+  const { posts } = usePostsData();
+  const { categories } = useContext(PageContext);
 
-  const { categories, post } = data;
+  const isLoading = !posts || !categories;
 
   return (
     <Fragment>
       {!isLoading ? (
         <div className="CONTENT">
-          <Header />
-
           <ul className="CONTENT__blog">
-            {post.map((item, key) => {
+            {posts.map((item, key) => {
               const postCategory = categories.find(
                 (category) => category._id === item.category
               );
@@ -26,15 +25,17 @@ export const Homepage = () => {
                   <a
                     className="CONTENT__blog-post-image"
                     href={`/post/${item.title}`}
-                    style={{ backgroundImage: `url(${item.image})` }}
+                    style={{
+                      backgroundImage: `url(${bufferImageToString(
+                        item.image.mimetype,
+                        item.image.file.data
+                      )})`,
+                    }}
                   >
                     {""}
                   </a>
                   <p className="CONTENT__blog-post-date">
-                    {new Date(item.createdAt).toLocaleString("en-gb", {
-                      month: "short",
-                      day: "numeric",
-                    })}
+                    {postDate(item.createdAt)}
                   </p>
                   <a
                     className="CONTENT__blog-post-link"
@@ -54,8 +55,6 @@ export const Homepage = () => {
               );
             })}
           </ul>
-
-          <Footer />
         </div>
       ) : (
         <span className="LOADING">Loading...</span>

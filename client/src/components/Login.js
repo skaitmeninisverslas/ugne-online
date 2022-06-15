@@ -1,10 +1,12 @@
-import React, { Fragment, useEffect } from "react";
+import React, { useEffect } from "react";
+import { Formik, Form, Field } from "formik";
 import { useHistory } from "react-router-dom";
 
-import { useData } from "../DataContext";
+import { login } from "./helpers/apiCalls";
+import { useAuthentication } from "./hooks/useAuthentication";
 
 export const Login = () => {
-  const { authenticated, isLoading } = useData();
+  const { authenticated, setUpdateData } = useAuthentication();
   const history = useHistory();
 
   useEffect(() => {
@@ -13,51 +15,63 @@ export const Login = () => {
     }
   }, [authenticated, history]);
 
+  const handleSubmitForm = (values) => {
+    setUpdateData(true);
+    login(values).then((res) => {
+      if (res.data === "USER_LOGGED") {
+        history.push("/admin");
+      }
+    });
+  };
+
+  const initialValues = { email: "", password: "" };
+
   return (
-    <Fragment>
-      {!isLoading && !authenticated && (
-        <div className="container h-100 d-flex">
-          <div className="jumbotron m-auto">
-            <div className="container">
-              <h3 className="display-6">Please Sign in</h3>
+    <Formik initialValues={initialValues} onSubmit={handleSubmitForm}>
+      {({ submitForm }) =>
+        !authenticated && (
+          <div className="container h-100 d-flex">
+            <div className="jumbotron m-auto">
+              <div className="container">
+                <h3 className="display-6">Please Sign in</h3>
+              </div>
+              <Form className="mt-4">
+                <div className="form-group">
+                  <label>Email</label>
+                  <Field
+                    className="form-control"
+                    type="email"
+                    name="email"
+                    placeholder="Email"
+                    required
+                  />
+                </div>
+
+                <div className="form-group">
+                  <label>Password</label>
+                  <Field
+                    className="form-control"
+                    type="password"
+                    name="password"
+                    placeholder="Password"
+                    required
+                  />
+                </div>
+
+                <div className="form-group text-center">
+                  <button
+                    type="submit"
+                    className="btn btn-success"
+                    onClick={submitForm}
+                  >
+                    Login
+                  </button>
+                </div>
+              </Form>
             </div>
-            <form
-              action={`/api/users/login`}
-              className="mt-4"
-              method="POST"
-              encType="multipart/form-data"
-            >
-              <div className="form-group">
-                <label>Email</label>
-                <input
-                  className="form-control"
-                  type="email"
-                  name="email"
-                  placeholder="Email"
-                />
-              </div>
-
-              <div className="form-group">
-                <label>Password</label>
-                <input
-                  className="form-control"
-                  type="password"
-                  name="password"
-                  placeholder="Password"
-                />
-              </div>
-
-              <div className="form-group text-center">
-                <input
-                  className="btn btn-secondary"
-                  type="submit"
-                  value="Login"
-                />
-              </div>
-            </form>
           </div>
-        </div>
-      )}
-    </Fragment>
+        )
+      }
+    </Formik>
   );
 };

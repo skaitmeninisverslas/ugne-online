@@ -1,6 +1,7 @@
 import React from "react";
 import { Field } from "formik";
 import {
+  bufferImageToString,
   createUrlForLocalImage,
   getFileFromInput,
   trimmedLocalImageUrl,
@@ -43,8 +44,8 @@ export const SeoInputs = ({
 
       {isEdit && image && (
         <img
-          src={image}
-          className="rounded d-block mx-auto my-3"
+          src={bufferImageToString(image.mimetype, image.file.data)}
+          className="rounded d-block mx-auto mt-3"
           width="200"
           alt=""
         />

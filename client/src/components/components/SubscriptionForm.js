@@ -19,8 +19,10 @@ export const SubscriptionForm = () => {
       });
   };
 
+  const initialValues = { subscribe: "" };
+
   return (
-    <Formik initialValues={{}} onSubmit={handleSubmitForm}>
+    <Formik initialValues={initialValues} onSubmit={handleSubmitForm}>
       {({ submitForm }) => (
         <Fragment>
           <Form>

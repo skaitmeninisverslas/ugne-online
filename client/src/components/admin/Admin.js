@@ -9,7 +9,7 @@ import { Subscribers } from "./Subscribers";
 import { Pages } from "./Pages";
 import { Comments } from "./Comments";
 import { setLocalStorageForComponent } from "../helpers/constants";
-import { useData } from "../../DataContext";
+import { useAuthentication } from "../hooks/useAuthentication";
 
 import "jquery/dist/jquery.min.js";
 import "bootstrap/dist/js/bootstrap.min.js";
@@ -17,11 +17,9 @@ import "popper.js/dist/popper.min.js";
 
 export const Admin = () => {
   const [component, setComponent] = useState(setLocalStorageForComponent);
-  const { authenticated, isLoading, data } = useData();
 
+  const { authenticated } = useAuthentication();
   const history = useHistory();
-
-  const { categories, menu, post, pages, subscriber, comments, user } = data;
 
   useEffect(() => {
     if (!authenticated) {
@@ -33,31 +31,40 @@ export const Admin = () => {
     localStorage.setItem("component", JSON.stringify(component));
   }, [component]);
 
+  const setButtonActive = (activeComponent) =>
+    activeComponent === component
+      ? {
+          backgroundColor: "#2271B1",
+          border: "#2271B1",
+          color: "#fff",
+        }
+      : {};
+
   const components = () => {
     switch (component) {
       case "posts":
-        return <Posts posts={post} categories={categories} />;
+        return <Posts />;
       case "pages":
-        return <Pages pages={pages} />;
+        return <Pages />;
       case "categories":
-        return <Categories categories={categories} />;
+        return <Categories />;
       case "user":
-        return <User user={user} />;
+        return <User />;
       case "comments":
-        return <Comments comments={comments} posts={post} />;
+        return <Comments />;
       case "menu":
-        return <Menu menu={menu} />;
+        return <Menu />;
       case "subscribers":
-        return <Subscribers subscribers={subscriber} />;
+        return <Subscribers />;
 
       default:
-        return <Posts posts={post} categories={categories} />;
+        return <Posts />;
     }
   };
 
   return (
     <Fragment>
-      {!isLoading && authenticated && (
+      {authenticated && (
         <div className="h-100 container-fluid admin">
           <div className="row h-100">
             <ul
@@ -76,69 +83,65 @@ export const Admin = () => {
               </li>
 
               <li className="mt-3">
-                {post && (
-                  <button
-                    className="text-sm-right btn btn-light w-100"
-                    onClick={() => setComponent("posts")}
-                    name="posts"
-                  >
-                    <i className="fas fa-copy"></i> Posts
-                  </button>
-                )}
-              </li>
-
-              <li className="mt-3">
-                {pages && (
-                  <button
-                    className="text-sm-right btn btn-light w-100"
-                    onClick={() => setComponent("pages")}
-                    name="pages"
-                  >
-                    <i className="fas fa-copy"></i> Pages
-                  </button>
-                )}
-              </li>
-
-              <li className="mt-3">
-                {categories && (
-                  <button
-                    className="text-sm-right btn btn-light w-100"
-                    onClick={() => setComponent("categories")}
-                    name="categories"
-                  >
-                    <i className="fas fa-folder"></i> Categories
-                  </button>
-                )}
-              </li>
-
-              <li className="mt-3">
-                {user && (
-                  <button
-                    className="text-sm-right btn btn-light w-100"
-                    onClick={() => setComponent("user")}
-                    name="user"
-                  >
-                    <i className="fas fa-user"></i> User Account
-                  </button>
-                )}
-              </li>
-
-              <li className="mt-3">
-                {menu && (
-                  <button
-                    className="text-sm-right btn btn-light w-100"
-                    onClick={() => setComponent("menu")}
-                    name="menu"
-                  >
-                    <i className="fas fa-ellipsis-h"></i> Menu
-                  </button>
-                )}
+                <button
+                  className="text-sm-right btn btn-light w-100 shadow-none"
+                  onClick={() => setComponent("posts")}
+                  style={setButtonActive("posts")}
+                  name="posts"
+                >
+                  <i className="fas fa-copy"></i> Posts
+                </button>
               </li>
 
               <li className="mt-3">
                 <button
-                  className="text-sm-right btn btn-light w-100"
+                  className="text-sm-right btn btn-light w-100 shadow-none"
+                  onClick={() => setComponent("pages")}
+                  style={setButtonActive("pages")}
+                  name="pages"
+                >
+                  <i className="fas fa-copy"></i> Pages
+                </button>
+              </li>
+
+              <li className="mt-3">
+                <button
+                  className="text-sm-right btn btn-light w-100 shadow-none"
+                  onClick={() => setComponent("categories")}
+                  style={setButtonActive("categories")}
+                  name="categories"
+                >
+                  <i className="fas fa-folder"></i> Categories
+                </button>
+              </li>
+
+              <li className="mt-3">
+                <button
+                  className="text-sm-right btn btn-light w-100 shadow-none"
+                  onClick={() => setComponent("user")}
+                  style={setButtonActive("user")}
+                  name="user"
+                >
+                  <i className="fas fa-user"></i> User Account
+                </button>
+              </li>
+
+              <li className="mt-3">
+                <button
+                  className="text-sm-right btn btn-light w-100 shadow-none"
+                  onClick={() => setComponent("menu")}
+                  style={setButtonActive("menu")}
+                  name="menu"
+                >
+                  <i className="fas fa-ellipsis-h"></i> Menu
+                </button>
+              </li>
+
+              <li className="mt-3">
+                <button
+                  className="text-sm-right btn btn-light w-100 shadow-none"
                   onClick={() => setComponent("subscribers")}
+                  style={setButtonActive("subscribers")}
                   name="subscribers"
                 >
                   <i className="fas fa-user"></i> Subscribers
@@ -146,15 +149,14 @@ export const Admin = () => {
               </li>
 
               <li className="my-3">
-                {comments && (
-                  <button
-                    className="text-sm-right btn btn-light w-100"
-                    onClick={() => setComponent("comments")}
-                    name="comments"
-                  >
-                    <i className="fas fa-comments"></i> Comments
-                  </button>
-                )}
+                <button
+                  className="text-sm-right btn btn-light w-100 shadow-none"
+                  onClick={() => setComponent("comments")}
+                  style={setButtonActive("comments")}
+                  name="comments"
+                >
+                  <i className="fas fa-comments"></i> Comments
+                </button>
               </li>
 
               <li className="mt-auto align-self-end">
