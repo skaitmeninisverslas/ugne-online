@@ -1,6 +1,6 @@
 import React, { Fragment, useState } from "react";
 import { Formik, Form, Field } from "formik";
-import { isEmpty } from "lodash-es";
+import { isEmpty } from "lodash";
 
 import {
   bufferImageToString,

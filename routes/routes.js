@@ -19,6 +19,7 @@ const storePostController = require("../controllers/posts/store");
 const deletePostController = require("../controllers/posts/delete");
 const postEditController = require("../controllers/posts/change");
 const getPostsController = require("../controllers/posts/get");
+const getPostController = require("../controllers/post/get");
 // CATEGORIES
 const storeCategoryController = require("../controllers/categories/store");
 const deleteCategoryController = require("../controllers/categories/delete");
@@ -62,6 +63,7 @@ module.exports = (app) => {
   );
   app.get("/api/post/delete/:id", auth, deletePostController);
   app.get("/api/posts/get", getPostsController);
+  app.get("/api/post/get/:id", getPostController);
   // Page routes
   app.post(
     "/api/page/store",

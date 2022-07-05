@@ -1,8 +1,9 @@
 // API endpoints
-export const ADMIN_LINK = "/api/data";
+
 // INSTAGRAM API
 const access_token = process.env.REACT_APP_INSTAGRAM_TOKEN;
 const user_id = process.env.REACT_APP_INSTAGRAM_USER_ID;
+export const API_BASE = process.env.REACT_APP_API_BASE_URL;
 export const INSTAGRAM_LINK = `https://graph.instagram.com/v11.0/${user_id}/media?fields=media_url,permalink&access_token=${access_token}`;
 
 // HELPERS

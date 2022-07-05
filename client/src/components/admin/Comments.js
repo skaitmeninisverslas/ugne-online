@@ -1,4 +1,4 @@
-import { isEmpty } from "lodash-es";
+import { isEmpty } from "lodash";
 import React, { Fragment, useState } from "react";
 
 import { ACTIONS } from "../actions/actions";

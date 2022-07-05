@@ -1,5 +1,5 @@
 import React from "react";
-import { BrowserRouter, Route } from "react-router-dom";
+import { Route } from "react-router-dom";
 
 import { Homepage } from "./components/Homepage";
 import { Admin } from "./components/admin/Admin";
@@ -16,43 +16,41 @@ import "./scss/app.scss";
 const App = () => {
   return (
     <CoreReducerProvider>
-      <BrowserRouter>
-        <Route
-          exact
-          path="/"
-          render={() => (
-            <PageProvider>
-              <Homepage />
-            </PageProvider>
-          )}
-        />
-        <Route
-          path="/categories/:category"
-          render={() => (
-            <PageProvider>
-              <Category />
-            </PageProvider>
-          )}
-        />
-        <Route
-          path="/post/:title"
-          render={() => (
-            <PageProvider>
-              <Post />
-            </PageProvider>
-          )}
-        />
-        <Route
-          path="/page/:title"
-          render={() => (
-            <PageProvider>
-              <Page />
-            </PageProvider>
-          )}
-        />
-        <Route exact path="/admin" component={Admin} />
-        <Route exact path="/login" component={Login} />
-      </BrowserRouter>
+      <Route
+        exact
+        path="/"
+        render={() => (
+          <PageProvider>
+            <Homepage />
+          </PageProvider>
+        )}
+      />
+      <Route
+        path="/categories/:category"
+        render={() => (
+          <PageProvider>
+            <Category />
+          </PageProvider>
+        )}
+      />
+      <Route
+        path="/post/:title"
+        render={() => (
+          <PageProvider>
+            <Post />
+          </PageProvider>
+        )}
+      />
+      <Route
+        path="/page/:title"
+        render={() => (
+          <PageProvider>
+            <Page />
+          </PageProvider>
+        )}
+      />
+      <Route exact path="/admin" component={Admin} />
+      <Route exact path="/login" component={Login} />
     </CoreReducerProvider>
   );
 };

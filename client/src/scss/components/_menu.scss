@@ -78,6 +78,7 @@
       color: $black;
       text-decoration: none;
       &:hover {
+        animation-fill-mode: forwards;
         -webkit-animation-fill-mode: forwards !important;
         animation: colorIn;
         animation-duration: 0.5s;

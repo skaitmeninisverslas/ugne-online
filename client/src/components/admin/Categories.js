@@ -1,5 +1,5 @@
 import React, { Fragment, useState } from "react";
-import { isEmpty } from "lodash-es";
+import { isEmpty } from "lodash";
 
 import { ACTIONS } from "../actions/actions";
 import { AddEditCategoryModal } from "./components/modals/AddEditCategoryModal";

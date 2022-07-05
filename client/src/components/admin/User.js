@@ -9,7 +9,7 @@ import {
 } from "../helpers/constants";
 import { editUser } from "../helpers/apiCalls";
 import * as messages from "../messages/forms";
-import { isEmpty } from "lodash-es";
+import { isEmpty } from "lodash";
 import { useUserData } from "../hooks/useUserData";
 
 export const User = () => {

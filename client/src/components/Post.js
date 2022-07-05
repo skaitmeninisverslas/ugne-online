@@ -1,5 +1,5 @@
 import React, { Fragment, useContext, useEffect, useState } from "react";
-import { first } from "lodash-es";
+import { first } from "lodash";
 import { useLocation } from "react-router-dom";
 
 import {
